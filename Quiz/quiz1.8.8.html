@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale = 1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        ::-webkit-scrollbar {
+            width: 0.5vw;
+        }    
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(#642bff,#ff22e6);
+            cursor: pointer;
+            border-radius: 10px;
+        }
+        select::-webkit-scrollbar-thumb {
+            background: #8c52ff;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+            *{
+            margin: 0;
+        }
+        body {
+            background-image: url(Sky\ texture.jpg);
+            background-position: top;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            display: grid;
+            column-gap: 15px;
+            grid-template-columns: 0.8fr 2fr 1.4fr;
+            grid-template-rows: 2vh auto;
+            overflow-y: auto;
+        }
+        
+
+        #nav {
+            background-color: transparent;
+            grid-column-start: 1;
+            grid-column-end: 4;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+            #toggleQuestionSet, #toggleQuestionPanel {
+                cursor: pointer;
+                border: 0;
+                height: 80%;
+                width: auto;
+                background: transparent;
+                font-size: 20px;
+                font-weight: 1000;
+                color: black;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            #toggleQuestionPanel{
+                font-size: 30px;
+                font-weight: 300;
+                transform: rotate(180deg);
+                transition: transform 0.3s ease-in-out;
+            }
+            #toggleQuestionPanel.rotated {
+                transform: rotate(0deg);
+            }
+
+/* <div id="question-set-select"> */
+        #question-set-select {
+            background-color: transparent;
+            border: 3px solid rgba(141, 141, 141, 0.5);
+            backdrop-filter: blur(3px);
+            height: 10vh;
+            border-radius: 10px;
+            padding: 15px 15px 100px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-left: 3%;
+        }
+        #exit { /* exit button*/
+                opacity: 0.8;
+                border-radius: 50%;
+                cursor: pointer;
+                margin-right: auto;
+                height: 30px;
+                width: 30px;
+                padding: 4px;
+                font-size: 18px;
+        }
+       
+            label{
+                color: #777777;
+                opacity: 0.6;
+                font-size: 25px;
+            }
+            .buttonandselect{
+                display: flex;
+                align-items: row;
+                justify-content: space-between;
+                gap: 5px;
+            }
+                #filterlogo{
+                    background-color:#ffff;
+                    height: 24px;
+                    width: 24px;
+                    border-radius: 50%;
+                    border: 1px solid #222;
+                    cursor: pointer;
+                    transform: rotate(0deg); /* Initial state: rightward */
+                    transition: transform 0.3s ease; /* Smooth transition */
+                }
+                #filterlogo.rotated {
+                transform: rotate(90deg); /* Downward state */
+                }
+                #question-set{
+                    opacity: 0.6;
+                    font-size: 20px;
+                    width: 100%;
+                    border-radius: 20px;
+                    cursor: pointer;
+                }
+                
+                #search-question-set{
+                    align-self: flex-end;
+                    width: 87%;
+                    height: 25px;
+                    border-radius: 20px;
+                    opacity: 0.6;
+                    font-size: 17px;
+                    border: 1px solid #222;
+                    display: none;   
+                }
+                .shuffle-toggle-container {
+                    display: none; /* Hidden by default */
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-left: 33px;
+                }
+                .shuffle-toggle-container label{
+                    font-size: 20px;
+                }
+                    .shuffle-toggle {
+                        width: 40px;
+                        height: 20px;
+                        appearance: none;
+                        background-color: #FF4C4C; /* Default OFF (Red) */
+                        border-radius: 20px;
+                        position: relative;
+                        cursor: pointer;
+                        transition: background 0.3s;
+                    }
+
+                        .shuffle-toggle:checked {
+                            background-color: #4CAF50; /* ON (Green) */
+                        }
+
+                        .shuffle-toggle::before {
+                            content: "";
+                            position: absolute;
+                            width: 18px;
+                            height: 18px;
+                            background: white;
+                            border-radius: 50%;
+                            top: 1px;
+                            left: 2px;
+                            transition: transform 0.3s;
+                        }
+
+                        .shuffle-toggle:checked::before {
+                            transform: translateX(20px);
+                        }
+
+                        .shuffle-toggle:not(:checked) {
+                            background-color: #FF4C4C; /* OFF (Red) */
+                        }
+     /* <div> */
+
+
+
+
+
+
+     /* <div id="quiz-container"> */                   
+        #quiz-container {
+            background-color: transparent;
+            border: 3px solid rgba(141, 141, 141, 0.5);
+            backdrop-filter: blur(3px);
+            min-height: 80vh;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            display: flex;
+            flex-grow: initial;
+            flex-direction: column;
+            align-items: center;
+            justify-content: start;
+
+        }
+        
+            #question-number{
+                color: #000000;
+                font-size: 25px;
+            }
+            #question-container {
+                margin-bottom: 20px;
+            }
+            #question{
+                color: #000000;
+                font-size: 21px;
+                text-align: justify;
+            }
+            .answer-button {
+                background: #fff;
+                opacity: 0.8;
+                color: #222;
+                font-size: 20px;
+                font-weight: 500;
+                width: 85%;
+                border: 1px solid #222;
+                padding: 10px;
+                margin: 10px 0;
+                text-align: left;
+                border-radius: 20px;
+                cursor: pointer;
+                transition: all 0.3s;
+            }
+       
+            .score-number{
+                color: #777777;
+                display: block;
+                margin: 5px;
+            }
+            p{
+                color: #777777;
+                display: inline-block;
+                margin: 5px;
+            }
+            #prev-button{
+                font-size: 20px;
+                background:transparent;
+                background-color: rgba(255, 255, 255, 0.2);
+                color: #777777;
+                font-weight: 10px;
+                width: 150px;
+                border: 0;
+                padding: 10px;
+                margin: 20px auto 0;
+                border-radius: 20px 0px 0px 20px;
+                cursor: pointer;
+            }
+            #next-button{
+                font-size: 20px;
+                background:transparent;
+                background-color: rgba(255, 255, 255, 0.2);
+                color: #777777;
+                font-weight: 10px;
+                width: 150px;
+                border: 0;
+                padding: 10px;
+                margin: 20px auto 0;
+                border-radius: 0px 20px 20px 0px; 
+                cursor: pointer;
+            }
+            #play-again-button{
+                align-self: center;
+                font-size: 30px;
+                background:transparent;
+                background-color: rgba(255, 255, 255, 0.2);
+                color: #777777;
+                font-weight: 500;
+                height: 50px;
+                width: 50px;
+                border: none;
+                margin: 10px auto 0;
+                border-radius: 50%; 
+                cursor: pointer;
+            }
+            #description-box {
+                background-color: transparent;
+                border: 3px solid rgba(141, 141, 141, 0.5);
+                backdrop-filter: blur(3px);
+                border-radius: 10px;
+                margin-top: auto;
+                padding: 5px;
+                width: 98%; 
+                align-self: center;
+                text-align: justify;
+            }
+
+                    #description-text {
+                        color: #000000;
+                        font-size: 18px;
+                        font-family: calibri;
+                    } 
+    /* <div> */
+
+
+
+
+      
+
+    /* <div id="questionpanel"> */
+    #questionpanel {
+        height: 90vh;
+        width: 97%;
+        display: flex;
+        flex-direction: column;
+        align-content: flex-start;
+        gap: 10px;
+        font-size: 24px;
+    }
+        #questionpanel .heading{
+            color: #777777;
+            background-color: transparent;
+            width: 100%;
+            border: 3px solid rgba(141, 141, 141, 0.5);
+            backdrop-filter: blur(3px);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            position: relative; 
+        }
+             form {
+                position: relative;
+                top: 50%;
+                left: 0%;
+                transform: translate(0%, -50%);
+                transition: width 0.5s ease;
+                width: 30px;
+                height: 30px;
+                background: transparent;
+                border-radius: 25px;
+                padding: 7px;
+                display: flex;
+                align-items: center;
+            }                
+                form input {/* Default state - input hidden */
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 42.5px;
+                    line-height: 30px;
+                    outline: 0;
+                    border: 0;
+                    display: none;
+                    font-size: 1em;
+                    border-radius: 10px;
+                    padding: 0 20px;
+                }
+
+                            form:hover,
+                            form input:focus,
+                            form input:not(:placeholder-shown) {/* Expand when hovered */
+                                width: 100%;
+                            }
+
+                            form:hover input,
+                            form input:focus,
+                            form input:not(:placeholder-shown) {/* Ensure input is visible when form is expanded */
+                                display: block;
+                                width: 100%;
+                }
+ 
+                .fa {/* Styling for search icon */
+                    box-sizing: border-box;
+                    padding: 10px;
+                    width: 42.5px;
+                    height: 42.5px;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    border-radius: 50%;
+                    color: #8c52ff;
+                    text-align: center;
+                    font-size: 1.2em;
+                    transition: all 0.5s;
+                }
+
+                            form:hover .fa,
+                            form input:focus + .fa,
+                            form input:not(:placeholder-shown) + .fa {/* Change background when input is focused or contains text */
+                                background: #8c52ff;
+                                color: white;
+                            }
+            
+                            form:has(input:not(:placeholder-shown)) {/* Keep form expanded if input has text */
+                                width: 100%;
+                            }
+
+            h1{
+            color: #777777;
+            opacity: 0.6;
+            font-size: 23px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap; 
+            z-index: -1;
+            }
+            #results-of-search {
+                position: absolute;
+                top: 70px;
+                right: min(10px, 5vw);
+                width: 29vw; /* Same as #questionpanel */
+                min-height: 10vh;
+                max-height: 80vh; /* Same as #questionpanel */
+                background: rgba(255, 255, 255, 0.9); /* Light background */
+                border: 2px solid rgba(141, 141, 141, 0.5);
+                backdrop-filter: blur(3px);
+                border-radius: 10px;
+                padding: 10px;
+                padding-bottom: 10px;
+                overflow-y: auto;
+                 /* Initially hidden */
+                 display: none;
+                z-index: 10; /* Ensures it's above other elements */
+            }
+                .search-result-item {
+                    padding: 8px;
+                    margin: 5px 0;
+                    background: #dccbff;
+                    border-radius: 5px;
+                    font-size: 20px;
+                    cursor: pointer;
+                    transition: background 0.3s;
+                }
+
+                .search-result-item:hover {
+                    background: #8c52ff;
+                    border-radius: 5px;;
+                }
+
+                .highlight {
+                    background: rgb(255, 255, 94);
+                    font-weight: bold;
+                }
+
+    #question-number-list {
+        background-color: transparent;
+        border: 3px solid rgba(141, 141, 141, 0.5);
+        backdrop-filter: blur(3px);
+        border-radius: 10px;
+        align-self: flex-start;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-content: flex-start;
+        overflow-y: auto;
+    }
+            #question-number-list button {
+                opacity: 0.8;
+                margin: 0.3em;
+                height: 2.8em;
+                width: 2.8em;
+                border-radius: 50%;
+                cursor: pointer;
+                text-align: center;
+            }
+            .highlighted {
+                background-color: black;
+                color: white;
+            }
+           
+       /* <div> */
+        
+@media screen and (max-width: 1100px) { /**/
+    body {
+        grid-template-columns: 3fr 1fr;
+        grid-template-rows: 3vh auto;
+    }
+    #question-set-select {
+        position: fixed;
+        top: 0;
+        left: -100vw; /* Initially hidden */
+        width: 50vw;
+        height: 90vh;
+        background-color: rgba(255, 255, 255, 0.5);
+        margin: 0;
+        padding: 20px;
+        border: 0;
+        border-radius: 0;
+        transition: left 0.3s ease-in-out;
+        z-index: 2;
+    }
+        #question-set-select.show {
+            left: 0; /* Slide in when active */
+        }
+
+    #quiz-container {
+        margin-left: 1vw;
+    }
+        #question-container{
+            overflow-x: auto;
+            max-width: 100%;
+        }
+            #question-number{
+            font-size: 15px;
+            font-weight: bold;
+            overflow-x: auto;
+            }
+            #question{
+            font-size: 19px;
+            overflow-x: auto;
+            }
+        .answer-button{
+            font-size: 15px;
+        }
+        #prev-button,#next-button{
+            font-size: 17px;
+            border: 1px solid rgba(0, 0, 0, 1);
+        }
+        #play-again-button{
+            border: 1px solid rgba(0, 0, 0, 1);
+            line-height: 4px;
+        }
+        .score-number, #score-container p {
+            font-size: 16px;
+            display: inline;
+        }
+        #description-box{
+            overflow-x: auto;
+            margin-top: auto;
+        }
+        #description-text{
+            font-size: 15px;
+        }
+    #questionpanel {
+        width: 100%;
+    }
+        #results-of-search {
+            width: 50vw;
+            font-size: 15px;
+        }
+        
+        h1 {
+            font-size: 15px;
+        }
+
+}
+@media screen and (max-width: 700px) { /**/
+    body {
+        grid-template-columns: 1fr;
+        column-gap: 0;
+    }
+    
+    #quiz-container {
+        margin: 1vw;
+        justify-self: center;
+        width: 85vw;
+        display: flex;
+
+    }
+    #question-container{
+            overflow-x: auto;
+            max-width: 100%;
+        }
+        #question-number{
+        font-size: 15px;
+        font-weight: bold;
+        overflow-x: auto;
+        }
+        #question{
+            font-size: 15px;
+            overflow-x: auto;
+        }
+        .score-number, #score-container p {
+        font-size: 10px;
+        display: inline;
+        }
+        #description-box{
+        align-self: center;
+        width: 99%;
+        overflow-x: auto;
+        margin-top: auto;
+        }
+            #description-text{
+            font-size: 13px;
+            }
+    #questionpanel {
+        position: fixed;
+        top: 0;
+        right: -100vw;
+        width: 60vw;
+        height: 90vh;
+        background-color: rgba(255, 255, 255, 0.5);
+        padding: 20px;
+        border: 0;
+        border-radius: 0;
+        transition: right 0.3s ease-in-out;
+        z-index: 1;
+    }
+        #questionpanel.show {
+            right: 0;
+        }
+        #results-of-search {
+            width: 76vw;
+            font-size: 15px;
+        }
+        h1 {
+            font-size: 23px;
+        }
+      
+}
+@media screen and (min-width: 1101px) { /*For hiding purposes*/
+      #nav{
+        visibility: hidden;
+      }
+}
+@media screen and (min-width: 701px) { /*For hiding purposes*/
+    #toggleQuestionPanel{
+        visibility: hidden;
+      }    
+}       
+        
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+</head>
+
+<body>
+    <div id="nav">
+        <button id="toggleQuestionSet"">☰</button>
+        <button id="toggleQuestionPanel"">&#187</button>
+    </div>
+    
+    <div id="question-set-select">
+        <div>
+            <button id="exit" type="button" title="Exit"><i class="fa-solid fa-right-from-bracket"></i></button>
+            <label>Quiz</label>
+        </div>
+        <div class="buttonandselect">
+            <button id="filterlogo" type="button" onclick="filtericon()">&#10148;</button>
+            
+            <select id="question-set" onchange="changeQuestionSet()">
+                    
+                    <!--self made questionSets-->
+                    <option value="englishtestblogcom"style="font-weight: bold;">English Blog.com</option>
+                        <option value="englishtestblogcombasicgrammer">Basic Grammer (English Blog.com)</option>
+                        <option value="englishtestblogcomnoun">Noun (English Blog.com)</option>
+                        <option value="englishtestblogcomverb">Verb (English Blog.com)</option>
+                        <option value="englishtestblogcomadjective">Adjective (English Blog.com)</option>
+                        <option value="englishtestblogcomidioms">Idioms (English Blog.com)</option>
+                        <option value="englishtestblogcommiscellaneous">Misllaneous (English Blog.com)</option>
+                    <hr>
+                    <option value="awareness">Awareness</option>
+                    <hr>
+                    <option value="indianandinternationalfoodlaws" style="font-weight: bold; color: aqua;">Indian and International Food Laws (An Overview)</option>
+                        <option value="Indianfoodlaws" style="font-weight: bold; color:blueviolet;">Indian Food Law</option>
+                            <option value="fss2006" style="font-weight: bold;">FSSA 2006</option>
+                                <option value="fssact2006overview">Introduction and overview of FSSA 2006</option>
+                                <option value="fssact2006c1">Chapter I (FSSA 2006)</option>
+                                <option value="fssact2006c2">Chapter II (FSSA 2006)</option>
+                                <option value="fssact2006c3">Chapter III (FSSA 2006)</option>
+                                <option value="fssact2006c4">Chapter IV (FSSA 2006)</option>
+                                <option value="fssact2006c5">Chapter V (FSSA 2006)</option>
+                                <option value="fssact2006c6">Chapter VI (FSSA 2006)</option>
+                                <option value="fssact2006c7">Chapter VII (FSSA 2006)</option>
+                                <option value="fssact2006c8">Chapter VIII (FSSA 2006)</option>
+                                <option value="fssact2006c9">Chapter IX (FSSA 2006)</option>
+                                <option value="fssact2006c10">Chapter X (FSSA 2006)</option>
+                                <option value="fssact2006c11">Chapter XI (FSSA 2006)</option>
+                                <option value="fssact2006c12">Chapter XII (FSSA 2006)</option>
+                    <hr>
+                    <option value="fssairoleprovisioninitiative" style="font-weight: bold; color: aqua;">FSSAI-Role, Provision, Initiative</option>
+                        <option value="eatrightindia">Eat Right India</option>
+                            <option value="eatrightquestionbank1">&nbsp Eat Right Question Bank 1 (by FSSAI)</option>
+                            <option value="eatrightquestionbank2">&nbsp Eat Right Question Bank 2 (by FSSAI)</option>
+                            <option value="eatrightquestionbank3">&nbsp Eat Right Question Bank 3 (by FSSAI)</option>
+                            <option value="eatrightquestionbank4">&nbsp Eat Right Question Bank 4 (by FSSAI)</option>
+                    <hr>
+                    <option value="water"style="font-weight: bold;">Water</option>
+                    <hr>
+                    <option value="carbohydrate"style="font-weight: bold;">Carbohtdrate</option>
+                        <option value="propertiesofcarbohydrates">&nbsp &nbsp Overview and Properties of Carbohydrates</option>
+                        <option value="monoandoligosaccharides">&nbsp &nbsp Mono- and Oligosaccharides</option>
+                        <option value="polysaccharides">&nbsp &nbsp Polysaccharides</option>
+                    <hr>
+                    <option value="protein"style="font-weight: bold;">Protein</option>
+                        <option value="propertiesofproteins">&nbsp &nbsp Overview and Properties of Proteins</option>
+                        <option value="aminoacids">&nbsp &nbsp Amino acid</option>
+                        <option value="peptides">&nbsp &nbsp Peptides</option>
+                    <hr>
+                    <option value="lipid"style="font-weight: bold;">Lipid</option>
+                        <option value="protertiesoflipids">&nbsp &nbsp Overview and Properties of Lipids</option>
+                        <option value="fattyacids">&nbsp &nbsp Fatty acids</option>
+                        <option value="fatsandoils">&nbsp &nbsp Fats and Oils</option>
+                    <hr>
+                    <option value="vitamin" style="font-weight: bold;">Vitamin</option>
+                        <option value="vitaminoverview">Vitamin (overview)</option>
+                        <option value="fatsolublevitamins">Fat Soluble Vitamins</option>
+                            <option value="vitaminA">&nbsp &nbsp VItamin A</option>
+                            <option value="vitaminD">&nbsp &nbsp Vitamin D</option>
+                            <option value="vitaminE">&nbsp &nbsp Vitamin E</option>
+                            <option value="vitaminK">&nbsp &nbsp Vitamin K</option>
+                        <option value="watersolublevitamins">Water Soluble Vitamins</option>
+                            <option value="bvitamins">&nbsp &nbsp B Vitamins</option>
+                                <option value="vitaminB1">&nbsp &nbsp &nbsp Vitamin B&#8321</option>
+                                <option value="vitaminB2">&nbsp &nbsp &nbsp Vitamin B&#8322</option>
+                                <option value="vitaminB3">&nbsp &nbsp &nbsp Vitamin B&#8323</option>
+                                <option value="vitaminB5">&nbsp &nbsp &nbsp Vitamin B&#8325</option>
+                                <option value="vitaminB6">&nbsp &nbsp &nbsp Vitamin B&#8326</option>
+                                <option value="vitaminB7">&nbsp &nbsp &nbsp Vitamin B&#8327</option>
+                                <option value="vitaminB9">&nbsp &nbsp &nbsp Vitamin B&#8329</option>
+                                <option value="vitaminB12">&nbsp &nbsp &nbsp Vitamin B&#8321&#8322</option>
+                            <option value="vitaminC">&nbsp &nbsp Vitamin C</option>
+                    <hr>
+                    
+
+                    <!--external source questionsets add below-->
+                    <option value="cell">Cell</option>
+                    <option value="Foodpreservationnutritionmedicineetc">Food Preservation, Nutrition, Medicine etc.</option>
+                    <option value="Organicacid">Organic acid</option>
+                    <option value="Plant">Plant</option>
+                    <option value="PhysicalandChemicalChangesSolution">Physical and Chemical Changes Solution</option>
+
+                    <hr> 
+                    <!--Objective Food Science by Sanjeev Kumar Sharma and Harshad Kiran Kalwit-->
+                    <option value="sksharmaobjectivefoodscience" style="font-weight: bold;">Objective Food Science (S.K. Sharma)</option>
+                        <option value="sksharmafoodmicrobiology">&nbsp 1. Food Microbiology(Objective Food Science)</option>
+                            <option value="sksharmageneralmicrobiology">&nbsp &nbsp A. General Microbiology(Objective Food Science)</option>
+                            <option value="sksharmamicrobialspoilage">&nbsp &nbsp B. Microbial Spoilage(Objective Food Science)</option>
+                            <option value="sksharmaindustrialmicrobiology">&nbsp &nbsp C. Industrial Microbiology(Objective Food Science)</option>
+                        <option value="sksharmafoodchemistry">&nbsp 3. Food Chemistry(Objective Food Science)</option>
+                            <option value="sksharmachemistryoffoods">&nbsp &nbsp A. Chemistry of Foods(Objective Food Science)</option>
+                            <option value="sksharmamolecularbiology">&nbsp &nbsp B. Molecular biology(Objective Food Science)</option>
+                            <option value="sksharmahumannutritionandvitamin">&nbsp &nbsp C. Human nutrition and vitamin(Objective Food Science)</option>
+                            <option value="sksharmafoodanalysis">&nbsp &nbsp D. Food Analysis(Objective Food Science)</option>
+                            <option value="sksharmabiochemistry">&nbsp &nbsp E. Biochemistry(Objective Food Science)</option>
+                    <hr> 
+                    <!--Adda 247-->
+                    <option value="addfullamock" style="font-weight: bold;"> (Adda) Full Mock</option>
+                        <option value="addacfsoandtomock"> (Adda) CFSO and TO Mock test</option>
+                                <option value="addacfsoandtomockset1">&nbsp &nbsp (Adda) CFSO and TO Mock test set 1</option>
+                                <option value="addacfsoandtomockset2">&nbsp &nbsp (Adda) CFSO and TO Mock test set 2</option>
+                                <option value="addacfsoandtomockset3">&nbsp &nbsp (Adda) CFSO and TO Mock test set 3</option>
+                                <option value="addacfsoandtomockset4">&nbsp &nbsp (Adda) CFSO and TO Mock test set 4</option>
+                                <option value="addacfsoandtomockset5">&nbsp &nbsp (Adda) CFSO and TO Mock test set 5</option>
+                                <option value="addacfsoandtomockset6">&nbsp &nbsp (Adda) CFSO and TO Mock test set 6</option>
+                                <option value="addacfsoandtomockset7">&nbsp &nbsp (Adda) CFSO and TO Mock test set 7</option>
+                                <option value="addacfsoandtomockset8">&nbsp &nbsp (Adda) CFSO and TO Mock test set 8</option>
+                                <option value="addacfsoandtomockset9">&nbsp &nbsp (Adda) CFSO and TO Mock test set 9</option>
+                                <option value="addacfsoandtomockset10">&nbsp &nbsp (Adda) CFSO and TO Mock test set 10</option>
+                        <option value="addaassistantpersonalassistantjuniorassistant"> (Adda) Assistant, PA, JA Mock Test</option>
+                                <option value="addaassistantpersonalassistantjuniorassistantet1">&nbsp &nbsp (Adda) Assistant, PA, JA Mock Test set 1</option>
+                                <option value="addaassistantpersonalassistantjuniorassistantet2">&nbsp &nbsp (Adda) Assistant, PA, JA Mock Test set 2</option>
+                                <option value="addaassistantpersonalassistantjuniorassistantet3">&nbsp &nbsp (Adda) Assistant, PA, JA Mock Test set 3</option>
+                                <option value="addaassistantpersonalassistantjuniorassistantet4">&nbsp &nbsp (Adda) Assistant, PA, JA Mock Test set 4</option>
+                                <option value="addaassistantpersonalassistantjuniorassistantet5">&nbsp &nbsp (Adda) Assistant, PA, JA Mock Test set 5</option>
+                                <option value="addaassistantpersonalassistantjuniorassistantet6">&nbsp &nbsp (Adda) Assistant, PA, JA Mock Test set 6</option>
+                                <option value="addaassistantpersonalassistantjuniorassistantet7">&nbsp &nbsp (Adda) Assistant, PA, JA Mock Test set 7</option>
+                                <option value="addaassistantpersonalassistantjuniorassistantet8">&nbsp &nbsp (Adda) Assistant, PA, JA Mock Test set 8</option>
+                                <option value="addaassistantpersonalassistantjuniorassistantet9">&nbsp &nbsp (Adda) Assistant, PA, JA Mock Test set 9</option>
+                                <option value="addaassistantpersonalassistantjuniorassistantet10">&nbsp &nbsp (Adda) Assistant, PA, JA Mock Test set 10</option>
+                                <option value="addaassistantpersonalassistantjuniorassistantet11">&nbsp &nbsp (Adda) Assistant, PA, JA Mock Test set 11</option>
+                                <option value="addaassistantpersonalassistantjuniorassistantet12">&nbsp &nbsp (Adda) Assistant, PA, JA Mock Test set 12</option>
+                        <option value="addaindianandinternationalfoodlaw"> (Adda) Indian and International Food law</option>
+                        <option value="addafssairoleprovisioninitiative"> (Adda) FSSAI- Role, Function, Initiative</option>
+                        <option value="addafoodpreservationprocessingabdpackaging"> (Adda) Food Preservation, Processing and Packaging</option>
+                        <option value="addaenglishcomprehension"> (Adda) English Comprehension</option>
+                        <option value="addacomputerliteracy"> (Adda) Computer Literacy</option>
+                        <option value="addareasoning"> (Adda) Reasoning/General Intelligence and Maths</option>
+                        <option value="addageneralawareness"> (Adda) General Aqwareness</option>
+                        
+
+                    <hr>
+                    <!--SWA Education-->
+                    <option value="swafullmock" style="font-weight: bold;"> (SWA Education) Full Mock</option>
+                        <option value="swacfsoandtomock">(SWA) CFSO and FSO mock test</option>
+                        <option value="swaassistantmock">(SWA) Assistant mock test</option>
+                        <option value="swafoodpreservationprocessingabdpackaging"> (SWA) Food Preservation, Processing and Packaging</option>
+                        <option value="swafoodauthority"> (SWA) Food Authority/FSSAI</option>
+                        <option value="swafoodlaw"> (SWA) Food Laws</option>
+                        <option value="swacomputer"> (SWA) Computer Literacy</option>
+                    <hr>
+                    <!--pyqs add below-->
+                    <option value="fssaipyqs" style="font-weight: bold;">FSSAI PYQs</option>
+                        
+                        <option value="cfsopyq25072019">CFSO PYQ (25/07/2019)</option>
+                        <option value="cfsopyq30032022">CFSO PYQ CBT-1 (30/03/2022)</option>
+                        <option value="cfsopyq01102022">CFSO PYQ CBT-2 (01/10/2022)</option>
+                        <option value="topyq25072019">Technical Officer PYQ (25/07/2019)</option>
+                        <option value="topyqshift130032022">Technical Officer PYQ Shift 1 (30/03/2022)</option>
+                        <option value="topyqshift201102022">Technical Officer PYQ Shift 2 (01/10/2022)</option>
+                        <option value="foodanalyst3pyqset1">Food Analyst (3rd) PYQ set-A (2016)</option>
+                        <option value="assistantpyq24072019">Assistant PYQ (24/07/2019)</option>
+                        <option value="personalassistantpyqshift329032022">Personal Assistant PYQ Shift-3 (29/03/2022)</option>
+                        <option value="juniorassistantpyqgrade130032022">Junior Assistant PYQ Grade-1 (30/03/2022)</option>
+                        
+                    <hr>
+                    <option value="statepyqs" style="font-weight: bold;">State PYQs</option>
+
+                        <option value="jpscfsopyq2023paper1">JPSC FSO PYQ 2023 paper 1</option>
+                        <option value="jpscfsopyq2023paper2">JPSC FSO PYQ 2023 paper 2</option>
+                        <option value="jpscfsopyq2024paper1">JPSC FSO PYQ 2024 paper 1 (27/05/2024)</option>
+                        <option value="jpscfsopyq2024paper2">JPSC FSO PYQ 2024 paper 2</option>
+                        <option value="andrapdsfso2021">Andhra Pradesh FSO PYQ 2021</option>
+                    <hr>
+                    <!--write combine questionSets-->
+                    <option value="food-chemistry">Food Chemistry</option>
+                    
+
+            </select>
+            
+        </div>
+        <input type="text" id="search-question-set" oninput="filterOptions()" placeholder="&#128204 Filter question sets...">
+        <div class="shuffle-toggle-container">
+            <label for="shuffle-toggle">Shuffle questions</label>
+            <input type="checkbox" id="shuffle-toggle" class="shuffle-toggle" checked>
+        </div>        
+        
+    </div>
+    
+    <div id="quiz-container">
+        <div id="question-number">Question 1</div>
+        <div id="question-container">
+            <p id="question"></p>
+        </div>
+        <div id="answers-container">
+            <!-- Answers will be inserted here dynamically -->
+        </div>
+        <div id="score-container">
+            <p class="score-number">Score: <span id="score">0</span> out of <span id="outof">0</span></p>
+            <p>Correct: <span id="correct-answers">0</span></p>
+            <p>Wrong: <span id="wrong-answers">0</span></p>
+        </div>
+        <div class="interact">
+            <button id="prev-button">Previous</button>
+            <button id="next-button">Next</button>
+            <br>
+            <button id="play-again-button">&#8635</button>
+        </div>
+        
+        <div id="description-box" style="display: none;">
+            <p id="description-text"></p>
+        </div>
+    </div>
+
+    
+    <div id="questionpanel">
+       
+        <div class="heading">
+            <form action="">
+                <input type="search" id="search-bar" placeholder="search here ...">
+                <i class="fa fa-search"></i>
+            </form>
+            <h1>Question list</h1>
+        </div>
+
+        <div id="results-of-search"></div>
+
+        <div id="question-number-list">
+        </div> 
+
+    </div>
+    
+
+<!--add Internal javascripts below-->
+    <script src="Englishtestblogcom.js"></script>
+    <script src="Awareness.js"></script>
+    <script src="FSSAI laws (act, rule, regulations).js"></script>
+    <script src="FSSAI-role,provision,initiative.js"></script>
+    <script src="Water.js"></script> 
+    <script src="Carbohydrate.js"></script>
+    <script src="Protein.js"></script>
+    <script src="Lipid.js"></script>
+    <script src="Vitamin.js"></script> 
+    
+
+<!--add external sources of external Javascripts below-->
+    <script src="Science.js"></script>
+    <script src="S. K. Sharma_Objective_Food_Science.js"></script>
+    <script src="Adda English and Computer.js"></script>
+    <script src="Adda Fssai.js"></script>  
+    <script src="Adda General Aptitude.js"></script>
+    <script src="Adda Mock test.js"></script>
+    <script src="SWA English and Computer.js"></script>
+    <script src="SWA Fssai.js"></script>
+    <script src="SWA General Aptitude.js"></script>
+    <script src="SWA Mock test.js"></script>
+
+<!--add pyqs javascript below-->
+    
+    <script src="PYQ CFSO .js"></script>
+    <script src="PYQ TO.js"></script>
+    <script src="PYQ Food Analyst.js"></script>
+    <script src="PYQ Assistant.js"></script>
+    <script src="PYQ State FSO.js"></script>
+   
+
+
+    
+   
+
+
+<script> // main javascript following
+
+    // Define sets of questions below...
+const questionSets = {
+    //start of question sets...
+
+    // internal or mostly self-made sets following...
+        'englishtestblogcom': englishtestblogcom = [...englishtestblogcombasicgrammer,...englishtestblogcomnoun,...englishtestblogcomverb,...englishtestblogcomadjective,...englishtestblogcomidioms,...englishtestblogcommiscellaneous,],
+            'englishtestblogcombasicgrammer': englishtestblogcombasicgrammer,
+            'englishtestblogcomnoun': englishtestblogcomnoun,
+            'englishtestblogcomverb': englishtestblogcomverb,
+            'englishtestblogcomadjective': englishtestblogcomadjective,
+            'englishtestblogcomidioms': englishtestblogcomidioms,
+            'englishtestblogcommiscellaneous': englishtestblogcommiscellaneous,
+        'fssairoleprovisioninitiative': [...eatrightquestionbank1,...eatrightquestionbank2,...eatrightquestionbank3,...eatrightquestionbank4,],
+            'eatrightindia': [...eatrightindia,...eatrightquestionbank1,...eatrightquestionbank2,...eatrightquestionbank3,...eatrightquestionbank4,],
+            'eatrightquestionbank1': eatrightquestionbank1,
+            'eatrightquestionbank2': eatrightquestionbank2,
+            'eatrightquestionbank3': eatrightquestionbank3,
+            'eatrightquestionbank4': eatrightquestionbank4,
+        'awareness': awareness,
+
+
+        'fss2006': fss2006 = [...fssact2006overview,...fssact2006c1,...fssact2006c2,...fssact2006c3,...fssact2006c4,...fssact2006c5,...fssact2006c6,...fssact2006c7,...fssact2006c8,...fssact2006c9,...fssact2006c10,...fssact2006c11,...fssact2006c12,],
+            'fssact2006overview': fssact2006overview,
+            'fssact2006c1': fssact2006c1,
+            'fssact2006c2': fssact2006c2,
+            'fssact2006c3': fssact2006c3,
+            'fssact2006c4': fssact2006c4,
+            'fssact2006c5': fssact2006c5,
+            'fssact2006c6': fssact2006c6,
+            'fssact2006c7': fssact2006c7,
+            'fssact2006c8': fssact2006c8,
+            'fssact2006c9': fssact2006c9,
+            'fssact2006c10': fssact2006c10,
+            'fssact2006c11': fssact2006c11,
+            'fssact2006c12': fssact2006c12,
+
+
+        
+        'water': water,
+        'carbohydrate': carbohydrate = [...propertiesofcarbohydrates, ...monoandoligosaccharides, ...polysaccharides,],
+            'propertiesofcarbohydrates': propertiesofcarbohydrates,
+            'monoandoligosaccharides': monoandoligosaccharides,
+            'polysaccharides': polysaccharides,
+        'protein': protein = [...propertiesofproteins,...aminoacids,...peptides,],
+            'propertiesofproteins': propertiesofproteins,
+            'aminoacids':aminoacids,
+            'peptides': peptides,
+        'lipid': lipid =[...protertiesoflipids,...fattyacids,...fatsandoils,],
+            'protertiesoflipids': protertiesoflipids,
+            'fattyacids': fattyacids,
+            'fatsandoils': fatsandoils,
+        'vitamin': vitamin = [...vitaminoverview,...vitaminA,...vitaminD,...vitaminE,...vitaminK,...vitaminB1,...vitaminB2,...vitaminB3,...vitaminB5,...vitaminB6,...vitaminB7,...vitaminB9,...vitaminB12,...vitaminC,],
+            'vitaminoverview': vitaminoverview,
+            'fatsolublevitamins': [...vitaminA,...vitaminD,...vitaminE,...vitaminK,],
+                'vitaminA': vitaminA,
+                'vitaminD': vitaminD,
+                'vitaminE': vitaminE,
+                'vitaminK': vitaminK,
+            'watersolublevitamins':[...vitaminB1,...vitaminB2,...vitaminB3,...vitaminB5,...vitaminB6,...vitaminB7,...vitaminB9,...vitaminB12,...vitaminC,],
+                'bvitamins': [...vitaminB1,...vitaminB2,...vitaminB3,...vitaminB5,...vitaminB6,...vitaminB7,...vitaminB9,...vitaminB12,],
+                    'vitaminB1': vitaminB1,
+                    'vitaminB2': vitaminB2,
+                    'vitaminB3': vitaminB3,
+                    'vitaminB5': vitaminB5,
+                    'vitaminB6': vitaminB6,
+                    'vitaminB7': vitaminB7,
+                    'vitaminB9': vitaminB9,
+                    'vitaminB12': vitaminB12,
+                'vitaminC': vitaminC,
+
+    //external source sets following...
+        'cell': cell,
+        'Foodpreservationnutritionmedicineetc': Foodpreservationnutritionmedicineetc,
+        'Organicacid': Organicacid,
+        'Plant': Plant,
+        'PhysicalandChemicalChangesSolution': PhysicalandChemicalChangesSolution,
+        
+        /* objective food science (S.K Sharma)*/
+            'sksharmafoodmicrobiology': sksharmafoodmicrobiology = [...sksharmageneralmicrobiology,...sksharmamicrobialspoilage,...sksharmaindustrialmicrobiology,],
+                'sksharmageneralmicrobiology': sksharmageneralmicrobiology,
+                'sksharmamicrobialspoilage': sksharmamicrobialspoilage,
+                'sksharmaindustrialmicrobiology': sksharmaindustrialmicrobiology,
+            'sksharmafoodchemistry': sksharmafoodchemistry = [...sksharmachemistryoffoods,...sksharmamolecularbiology, ...sksharmahumannutritionandvitamin,...sksharmafoodanalysis,...sksharmabiochemistry,],
+                'sksharmachemistryoffoods': sksharmachemistryoffoods,
+                'sksharmamolecularbiology': sksharmamolecularbiology,
+                'sksharmahumannutritionandvitamin': sksharmahumannutritionandvitamin,
+                'sksharmafoodanalysis': sksharmafoodanalysis,
+                'sksharmabiochemistry': sksharmabiochemistry,
+
+            /* objective food science (S.K Sharma) combine set full*/ 'sksharmaobjectivefoodscience': [...sksharmafoodmicrobiology,...sksharmafoodchemistry],
+
+        /* Adda 247 */
+            
+                'addacfsoandtomock': addacfsoandtomock= [...addacfsoandtomockset1,...addacfsoandtomockset2, ...addacfsoandtomockset3, ...addacfsoandtomockset4, ...addacfsoandtomockset5, ...addacfsoandtomockset6,...addacfsoandtomockset7,,...addacfsoandtomockset8,,...addacfsoandtomockset9,],
+                        'addacfsoandtomockset1': addacfsoandtomockset1,
+                        'addacfsoandtomockset2': addacfsoandtomockset2,
+                        'addacfsoandtomockset3': addacfsoandtomockset3,
+                        'addacfsoandtomockset4': addacfsoandtomockset4,
+                        'addacfsoandtomockset5': addacfsoandtomockset5,
+                        'addacfsoandtomockset6': addacfsoandtomockset6,
+                        'addacfsoandtomockset7': addacfsoandtomockset7,
+                        'addacfsoandtomockset8': addacfsoandtomockset8,
+                        'addacfsoandtomockset9': addacfsoandtomockset9,
+                        'addacfsoandtomockset10': addacfsoandtomockset10,
+                'addaassistantpersonalassistantjuniorassistant': addaassistantpersonalassistantjuniorassistant= [...addaassistantpersonalassistantjuniorassistantet1,...addaassistantpersonalassistantjuniorassistantet2,...addaassistantpersonalassistantjuniorassistantet3,...addaassistantpersonalassistantjuniorassistantet4,...addaassistantpersonalassistantjuniorassistantet5,...addaassistantpersonalassistantjuniorassistantet6,...addaassistantpersonalassistantjuniorassistantet7,...addaassistantpersonalassistantjuniorassistantet8,...addaassistantpersonalassistantjuniorassistantet9,...addaassistantpersonalassistantjuniorassistantet10,...addaassistantpersonalassistantjuniorassistantet11,...addaassistantpersonalassistantjuniorassistantet12,],
+                    'addaassistantpersonalassistantjuniorassistantet1': addaassistantpersonalassistantjuniorassistantet1,
+                    'addaassistantpersonalassistantjuniorassistantet2': addaassistantpersonalassistantjuniorassistantet2,
+                    'addaassistantpersonalassistantjuniorassistantet3': addaassistantpersonalassistantjuniorassistantet3,
+                    'addaassistantpersonalassistantjuniorassistantet4': addaassistantpersonalassistantjuniorassistantet4,
+                    'addaassistantpersonalassistantjuniorassistantet5': addaassistantpersonalassistantjuniorassistantet5,
+                    'addaassistantpersonalassistantjuniorassistantet6': addaassistantpersonalassistantjuniorassistantet6,
+                    'addaassistantpersonalassistantjuniorassistantet7': addaassistantpersonalassistantjuniorassistantet7,
+                    'addaassistantpersonalassistantjuniorassistantet8': addaassistantpersonalassistantjuniorassistantet8,
+                    'addaassistantpersonalassistantjuniorassistantet9': addaassistantpersonalassistantjuniorassistantet9,
+                    'addaassistantpersonalassistantjuniorassistantet10': addaassistantpersonalassistantjuniorassistantet10,
+                    'addaassistantpersonalassistantjuniorassistantet11': addaassistantpersonalassistantjuniorassistantet11,
+                    'addaassistantpersonalassistantjuniorassistantet12': addaassistantpersonalassistantjuniorassistantet12,
+                'addaindianandinternationalfoodlaw': addaindianandinternationalfoodlaw,
+                'addafssairoleprovisioninitiative': addafssairoleprovisioninitiative,
+                'addafoodpreservationprocessingabdpackaging': addafoodpreservationprocessingabdpackaging,
+                'addaenglishcomprehension': addaenglishcomprehension,
+                'addacomputerliteracy': addacomputerliteracy,
+                'addareasoning': addareasoning,
+                'addageneralawareness': addageneralawareness,
+                             /*combined adda*/       'addfullamock': [...addacfsoandtomock,...addaassistantpersonalassistantjuniorassistant,...addaindianandinternationalfoodlaw,...addafssairoleprovisioninitiative,...addafoodpreservationprocessingabdpackaging,...addaenglishcomprehension,...addacomputerliteracy,...addareasoning,...addageneralawareness],
+
+         /*hr*/
+
+        /* SWA Education */
+            'swafullmock' : [...swacfsoandtomock,...swafoodpreservationprocessingabdpackaging,...swafoodauthority,...swacomputer,],
+                'swacfsoandtomock' : swacfsoandtomock,
+                'swaassistantmock':swaassistantmock,
+                'swafoodpreservationprocessingabdpackaging': swafoodpreservationprocessingabdpackaging,
+                'swafoodauthority': swafoodauthority,
+                'swafoodlaw': swafoodlaw,
+                'swacomputer': swacomputer,
+
+
+    // pyqs following...
+        'fssaipyqs': fssaipyqs = [...assistantpyq24072019,...cfsopyq25072019,...cfsopyq30032022,...jpscfsopyq2023paper1,...jpscfsopyq2023paper2,...jpscfsopyq2024paper1,...jpscfsopyq2024paper2,...juniorassistantpyqgrade130032022,...personalassistantpyqshift329032022,...topyq25072019,...topyqshift130032022,...foodanalyst3pyqset1,],
+        'cfsopyq25072019': cfsopyq25072019,
+        'cfsopyq30032022':cfsopyq30032022,
+        'cfsopyq01102022': cfsopyq01102022,
+        'topyq25072019': topyq25072019,
+        'topyqshift130032022': topyqshift130032022,
+        'topyqshift201102022': topyqshift201102022,
+        'foodanalyst3pyqset1': foodanalyst3pyqset1,
+        'assistantpyq24072019': assistantpyq24072019,
+        'personalassistantpyqshift329032022': personalassistantpyqshift329032022,
+        'juniorassistantpyqgrade130032022': juniorassistantpyqgrade130032022,
+        'jpscfsopyq2023paper1': jpscfsopyq2023paper1,
+        'jpscfsopyq2023paper2': jpscfsopyq2023paper2,
+        'jpscfsopyq2024paper1': jpscfsopyq2024paper1,
+        'jpscfsopyq2024paper2': jpscfsopyq2024paper2,
+        'andrapdsfso2021': andrapdsfso2021,
+        
+        
+        
+        
+    //mock pyqs following...
+        
+        //end of question sets.
+
+
+        //start of combine question sets...
+        'food-chemistry': [...carbohydrate,...protein,...lipid,...vitamin,],
+        // end of combine question sets.
+
+    }; 
+
+
+
+
+
+
+// <b>Alert!</b> try not to change the following...
+
+let currentQuestionSet = 'vitamin'; // Default question set
+let currentQuestionIndex = 0;
+let score = 0;
+let outof = 0;
+let correctAnswers = 0;
+let wrongAnswers = 0;
+
+let shuffledQuestions = [];
+
+const questionNumberList = document.getElementById("question-number-list");
+const questionNumber = document.getElementById("question-number");
+const questionContainer = document.getElementById("question");
+const answersContainer = document.getElementById("answers-container");
+const scoreSpan = document.getElementById("score");
+const outofSpan = document.getElementById("outof");
+const correctAnswersSpan = document.getElementById("correct-answers");
+const wrongAnswersSpan = document.getElementById("wrong-answers");
+const nextButton = document.getElementById("next-button");
+const prevButton = document.getElementById("prev-button");
+const playAgainButton = document.getElementById("play-again-button");
+const questionSetSelect = document.getElementById("question-set");
+
+
+
+function filtericon() {
+    const filterInput = document.getElementById("search-question-set");
+    const shuffleContainer = document.querySelector(".shuffle-toggle-container");
+    const filterButton = document.getElementById("filterlogo");
+
+    if (filterInput.style.display === "none" || filterInput.style.display === "") {
+        filterInput.style.display = "block"; // Show search input
+        shuffleContainer.style.display = "flex"; // Show shuffle toggle
+        filterButton.classList.add("rotated");
+    } else {
+        filterInput.style.display = "none"; // Hide search input
+        shuffleContainer.style.display = "none"; // Hide shuffle toggle
+        filterButton.classList.remove("rotated");
+    }
+}
+
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+function createQuestionNumberList() {
+    questionNumberList.innerHTML = "";
+    shuffledQuestions.forEach((_, index) => {
+        const questionNumberItem = document.createElement("button");
+        questionNumberItem.textContent = index + 1;
+        questionNumberItem.addEventListener("click", () => goToQuestion(index));
+        if (index === currentQuestionIndex) {
+            questionNumberItem.classList.add("highlighted");
+        }
+        questionNumberList.appendChild(questionNumberItem);
+    });
+}
+
+let answeredQuestions = {}; // Store attempted question states
+
+function changeQuestionSet() {
+    currentQuestionSet = questionSetSelect.value;
+    shuffledQuestions = [...questionSets[currentQuestionSet]];
+
+    const shuffleToggle = document.getElementById("shuffle-toggle");
+    if (shuffleToggle.checked) {
+        shuffleArray(shuffledQuestions); // Shuffle only if toggle is ON
+    }
+
+    currentQuestionIndex = 0;
+    score = 0;
+    outof = 0;  // ✅ Fixed: Removed 'let' to reset the global variable
+    correctAnswers = 0;
+    wrongAnswers = 0;
+    answeredQuestions = {}; // Reset when switching sets
+
+    scoreSpan.textContent = score;
+    outofSpan.textContent = outof;
+    correctAnswersSpan.textContent = correctAnswers;
+    wrongAnswersSpan.textContent = wrongAnswers;
+
+    createQuestionNumberList();
+    displayQuestion();
+}
+
+
+
+function goToQuestion(index) {
+    currentQuestionIndex = index;
+    displayQuestion();
+}
+
+function restorePreviousAnswers() {
+    const currentQuestion = shuffledQuestions[currentQuestionIndex];
+    const answerButtons = answersContainer.querySelectorAll(".answer-button");
+
+    if (answeredQuestions[currentQuestionIndex]) {
+        const selectedAnswers = answeredQuestions[currentQuestionIndex].selectedAnswers || [];
+        const correctAnswersArray = Array.isArray(currentQuestion.correct) ? currentQuestion.correct : [currentQuestion.correct];
+
+        answerButtons.forEach((button) => {
+            const buttonContent = button.textContent.trim();
+
+            if (correctAnswersArray.includes(buttonContent)) {
+                button.style.background = "rgba(0, 255, 0, 0.5)"; // Keep correct answers green
+            }
+            if (selectedAnswers.includes(buttonContent)) {
+                if (!correctAnswersArray.includes(buttonContent)) {
+                    button.style.background = "rgba(255, 0, 0, 0.5)"; // Keep wrong answers red
+                }
+            }
+            button.disabled = true; // Ensure buttons stay disabled
+        });
+    }
+}
+
+function filterOptions() {
+    const input = document.getElementById('search-question-set');
+    const filter = input.value.toLowerCase();
+    const select = document.getElementById('question-set');
+    const options = select.getElementsByTagName('option');
+    for (const option of options) {
+        const text = option.textContent.toLowerCase();
+        option.style.display = text.includes(filter) ? '' : 'none';
+    }
+}
+
+function displayQuestion() {
+    const descriptionBox = document.getElementById("description-box");
+    descriptionBox.style.display = "none";
+
+
+    if (currentQuestionIndex >= 0 && currentQuestionIndex < shuffledQuestions.length) {
+        const currentQuestion = shuffledQuestions[currentQuestionIndex];
+        questionNumber.textContent = `Question ${currentQuestionIndex + 1}`;
+        questionContainer.innerHTML = currentQuestion.question.replace(/\n/g, "<br>");
+
+        shuffleArray(currentQuestion.answers);
+        answersContainer.innerHTML = "";
+
+        currentQuestion.answers.forEach((answer) => {
+            const answerButton = document.createElement("button");
+            answerButton.innerHTML = answer;
+            answerButton.classList.add("answer-button");
+            answerButton.addEventListener("click", checkAnswer);
+            answersContainer.appendChild(answerButton);
+        });
+
+        if (answeredQuestions[currentQuestionIndex]) {
+        if (answeredQuestions[currentQuestionIndex].descriptionShown) {
+            showDescription(shuffledQuestions[currentQuestionIndex].description);
+        }
+            const { selectedAnswer, isCorrect } = answeredQuestions[currentQuestionIndex];
+            const answerButtons = answersContainer.querySelectorAll(".answer-button");
+            answerButtons.forEach((button) => {
+                if (button.innerHTML.trim() === selectedAnswer) {
+                    button.style.background = isCorrect ? "rgba(0, 255, 0, 0.5)" : "rgba(255, 0, 0, 0.5)";
+                }
+                if (!isCorrect && button.innerHTML.trim() === shuffledQuestions[currentQuestionIndex].correct) {
+                    button.style.background = "rgba(0, 255, 0, 0.5)";
+                }
+                button.disabled = true;
+            });
+        }
+
+        prevButton.disabled = currentQuestionIndex === 0;
+        nextButton.disabled = currentQuestionIndex === shuffledQuestions.length - 1;
+
+        highlightCurrentQuestionNumber();
+    } else {
+        questionNumber.textContent = "";
+        questionContainer.textContent = "Quiz completed!";
+        answersContainer.innerHTML = "";
+        prevButton.disabled = true;
+        nextButton.disabled = true;
+    }
+
+    restorePreviousAnswers(); // Restore colors when revisiting
+}
+
+function highlightCurrentQuestionNumber() {
+    const questionButtons = document.querySelectorAll("#question-number-list button");
+    questionButtons.forEach((button, index) => {
+        if (index === currentQuestionIndex) {
+            button.style.background = "black";
+            button.style.color = "white";
+        } else if (answeredQuestions[index]) {
+            button.style.background = answeredQuestions[index].isCorrect ? "limegreen" : "#FF0000B2";
+            button.style.color = "white";
+        } else {
+            button.style.background = "white";
+            button.style.color = "black";
+        }
+    });
+}
+
+function checkAnswer(event) {
+    const selectedAnswer = event.target.textContent.trim();
+    const currentQuestion = shuffledQuestions[currentQuestionIndex];
+    const answerButtons = answersContainer.querySelectorAll(".answer-button");
+
+    const correctAnswersArray = Array.isArray(currentQuestion.correct) ? currentQuestion.correct : [currentQuestion.correct];
+
+    // Ensure storage of multiple selected answers
+    if (!answeredQuestions[currentQuestionIndex]) {
+        answeredQuestions[currentQuestionIndex] = {
+            selectedAnswers: [],
+            isCorrect: false,
+        };
+    }
+
+    // Store the selected answer
+    if (!answeredQuestions[currentQuestionIndex].selectedAnswers.includes(selectedAnswer)) {
+        answeredQuestions[currentQuestionIndex].selectedAnswers.push(selectedAnswer);
+    }
+
+    // Check if selected answer is correct
+    const isCorrect = correctAnswersArray.includes(selectedAnswer);
+    if (isCorrect) {
+        answeredQuestions[currentQuestionIndex].isCorrect = true;
+    }
+
+    // Highlight correct/incorrect answers
+    answerButtons.forEach((button) => {
+        const buttonContent = button.textContent.trim();
+
+        if (correctAnswersArray.includes(buttonContent)) {
+            button.style.background = "rgba(0, 255, 0, 0.5)"; // Green for correct answers
+        } 
+        if (answeredQuestions[currentQuestionIndex].selectedAnswers.includes(buttonContent)) {
+            if (!correctAnswersArray.includes(buttonContent)) {
+                button.style.background = "rgba(255, 0, 0, 0.5)"; // Red for wrong answers
+            }
+        }
+        button.disabled = true; // Disable all buttons after selection
+    });
+
+    // Score calculations (increment only once per question)
+    if (isCorrect) {
+        if (!answeredQuestions[currentQuestionIndex].alreadyCounted) {
+            correctAnswers++;
+            score += 4;
+            outof +=4;
+            answeredQuestions[currentQuestionIndex].alreadyCounted = true;
+        }
+    } else {
+        wrongAnswers++;
+        score -= 1;
+        outof +=4;
+    }
+
+    if (currentQuestion.description) {
+        showDescription(currentQuestion.description);
+        answeredQuestions[currentQuestionIndex].descriptionShown = true;
+    }
+
+    // Update UI elements
+    scoreSpan.textContent = score;
+    outofSpan.textContent = outof;
+    correctAnswersSpan.textContent = correctAnswers;
+    wrongAnswersSpan.textContent = wrongAnswers;
+}
+
+
+
+function extractImgSrc(html) {
+    const imgElement = document.createElement("div");
+    imgElement.innerHTML = html;
+    const imgTag = imgElement.querySelector("img");
+    return imgTag ? imgTag.getAttribute("src") : null;
+}
+
+function showDescription(description) {
+    const descriptionBox = document.getElementById("description-box");
+    const descriptionText = document.getElementById("description-text");
+    descriptionText.innerHTML = description;
+    descriptionBox.style.display = "block";
+}
+
+prevButton.addEventListener("click", () => {
+    if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        displayQuestion();
+    }
+});
+
+nextButton.addEventListener("click", () => {
+    if (currentQuestionIndex < shuffledQuestions.length - 1) {
+        currentQuestionIndex++;
+        displayQuestion();
+    }
+});
+
+playAgainButton.addEventListener("click", () => {
+    currentQuestionIndex = 0;
+    score = 0;
+    outof = 0;
+    correctAnswers = 0;
+    wrongAnswers = 0;
+    answeredQuestions = {}; // Clear previous attempts
+
+    scoreSpan.textContent = score;
+    outofSpan.textContent = outof;
+    correctAnswersSpan.textContent = correctAnswers;
+    wrongAnswersSpan.textContent = wrongAnswers;
+
+    const shuffleToggle = document.getElementById("shuffle-toggle");
+    if (shuffleToggle.checked) {
+        shuffleArray(shuffledQuestions); // Only shuffle if toggle is ON
+    }
+
+    createQuestionNumberList();
+    displayQuestion();
+});
+
+
+document.getElementById("shuffle-toggle").addEventListener("change", function (event) {
+    const shuffleToggle = event.target;
+
+    if (shuffleToggle.checked) {
+        // User is turning ON shuffle
+        const confirmShuffleOn = confirm("You will lose your progress by turning on question shuffling.");
+        if (!confirmShuffleOn) {
+            shuffleToggle.checked = false; // Revert the toggle to OFF
+            return;
+        }
+    } else {
+        // User is turning OFF shuffle
+        const confirmShuffleOff = confirm("You will lose your progress by turning off question shuffling.");
+        if (!confirmShuffleOff) {
+            shuffleToggle.checked = true; // Revert the toggle to ON
+            return;
+        }
+    }
+
+    changeQuestionSet(); // Reload the questions based on the new shuffle state
+});
+
+function debounce(func, delay) {
+    let timer;
+    return function (...args) {
+        clearTimeout(timer); // Reset timer if the user keeps typing
+        timer = setTimeout(() => func.apply(this, args), delay);
+    };
+}
+
+// Ensure script runs only after questionSets is fully defined
+document.getElementById("search-bar").addEventListener("input", debounce(function () {
+    const searchText = this.value.trim().toLowerCase();
+    const resultsContainer = document.getElementById("results-of-search");
+
+    if (searchText === "") {
+        resultsContainer.style.display = "none";
+        resultsContainer.innerHTML = "";
+        return;
+    }
+
+    let results = [];
+
+    for (const setName in questionSets) {
+        const questionSet = questionSets[setName];
+
+        if (!questionSet || !Array.isArray(questionSet)) {
+            continue;
+        }
+
+        questionSet.forEach((questionObj) => {
+            if (!questionObj || typeof questionObj !== "object") {
+                return;
+            }
+
+            Object.values(questionObj).forEach((value) => {
+                if (typeof value === "string" && value.toLowerCase().includes(searchText)) {
+                    results.push({ text: value, setName: setName });
+                } else if (Array.isArray(value)) {
+                    value.forEach((answer) => {
+                        if (typeof answer === "string" && answer.toLowerCase().includes(searchText)) {
+                            results.push({ text: answer, setName: setName });
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    displaySearchResults(results, searchText);
+}, 300)); // 300ms delay
+
+
+    let allSearchResults = []; // Store all results
+let resultsLoaded = 0; // Track how many results are displayed
+const RESULTS_BATCH_SIZE = 50; // Load 50 results at a time
+
+function displaySearchResults(results, searchText) {
+    const resultsContainer = document.getElementById("results-of-search");
+    resultsContainer.innerHTML = ""; // Clear previous results
+    allSearchResults = results; // Store all matches
+    resultsLoaded = 0; // Reset counter
+
+    if (results.length === 0) {
+        resultsContainer.style.display = "none"; // Hide if no matches
+        return;
+    }
+
+    resultsContainer.style.display = "block"; // Show when there are results
+    console.log(`Total search results: ${results.length}`);
+
+    loadMoreResults(); // Load initial batch
+
+    // Attach scroll event listener
+    resultsContainer.removeEventListener("scroll", handleScroll);
+    resultsContainer.addEventListener("scroll", handleScroll);
+}
+
+// Load more results when scrolling
+function loadMoreResults() {
+    const resultsContainer = document.getElementById("results-of-search");
+
+    let batch = allSearchResults.slice(resultsLoaded, resultsLoaded + RESULTS_BATCH_SIZE);
+    batch.forEach((result) => {
+        const resultItem = document.createElement("div");
+        resultItem.classList.add("search-result-item");
+        resultItem.innerHTML = highlightMatch(result.text, document.getElementById("search-bar").value);
+
+        // Click event to switch to that question set
+        resultItem.addEventListener("click", function () {
+            switchToQuestionSet(result.setName, result.text);
+        });
+
+        resultsContainer.appendChild(resultItem);
+    });
+
+    resultsLoaded += batch.length; // Update count
+
+    if (resultsLoaded >= allSearchResults.length) {
+        console.log("All results loaded.");
+        resultsContainer.removeEventListener("scroll", handleScroll); // Stop listening if all results are loaded
+    }
+}
+
+// Detect when user scrolls to the bottom
+function handleScroll() {
+    const resultsContainer = document.getElementById("results-of-search");
+    
+    if (resultsContainer.scrollTop + resultsContainer.clientHeight >= resultsContainer.scrollHeight - 10) {
+        console.log("Scrolled to bottom, loading more results...");
+        loadMoreResults();
+    }
+}
+
+
+    function highlightMatch(text, searchText) {
+        const regex = new RegExp(`(${searchText})`, "gi");
+        return text.replace(regex, `<span class="highlight">$1</span>`);
+    }
+
+    function switchToQuestionSet(setName, matchedQuestionText) {
+    document.getElementById("question-set").value = setName; // Select the question set
+    changeQuestionSet(); // Load the selected set
+
+    // Wait a moment to ensure the set loads before finding the question
+    setTimeout(() => {
+        goToMatchingQuestion(matchedQuestionText);
+    }, 100);
+    
+    document.getElementById("results-of-search").style.display = "none"; // Hide results
+}
+
+function goToMatchingQuestion(matchedText) {
+    let questionList = shuffledQuestions.length ? shuffledQuestions : questionSets[currentQuestionSet];
+
+    if (!questionList) return;
+
+    // Find the index of the question that contains the matched text in any field
+    let matchingIndex = questionList.findIndex(q => 
+        q.question.includes(matchedText) || 
+        (q.answers && q.answers.some(ans => ans.includes(matchedText))) || 
+        (q.description && q.description.includes(matchedText))
+    );
+
+    if (matchingIndex !== -1) {
+        currentQuestionIndex = matchingIndex; // Jump to that question
+        displayQuestion(); // Show it in the quiz
+    } else {
+        console.warn("Matching question not found in", currentQuestionSet);
+    }
+}
+
+// Toggle left sidebar button function
+document.getElementById("toggleQuestionSet").addEventListener("click", function () {
+    const questionSetSelect = document.getElementById("question-set-select");
+    if (questionSetSelect.classList.contains("show")) {
+        questionSetSelect.classList.remove("show");
+    } else {
+        questionSetSelect.classList.add("show");
+    }
+});
+// Toggle right sidebar button function
+document.getElementById("toggleQuestionPanel").addEventListener("click", function () {
+    const questionPanel = document.getElementById("questionpanel");
+    questionPanel.classList.toggle("show");
+    this.classList.toggle("rotated"); // Toggle flip class
+});
+
+
+changeQuestionSet(); // Call this to initialize the quiz
+
+
+
+ // Keyboard event listener
+document.addEventListener("keydown", function (event) {
+if (event.key === "ArrowRight" || event.key === "ArrowUp") {
+    // Right arrow key pressed, trigger the next button click
+    nextButton.click();
+} else if (event.key === "ArrowLeft"|| event.key === "ArrowDown") {
+    // Left arrow key pressed, trigger the previous button click
+    prevButton.click();
+} else if (event.key === "1" || event.key === "NumPad1") {
+    // '1' or 'NumPad1' key pressed, select answer 1
+    const answerButton = answersContainer.querySelector(".answer-button:nth-child(1)");
+    if (answerButton) {
+        answerButton.click();
+    }
+} else if (event.key === "2" || event.key === "NumPad2") {
+    // '2' or 'NumPad2' key pressed, select answer 2
+    const answerButton = answersContainer.querySelector(".answer-button:nth-child(2)");
+    if (answerButton) {
+        answerButton.click();
+    }
+} else if (event.key === "3" || event.key === "NumPad3") {
+    // '3' or 'NumPad3' key pressed, select answer 3
+    const answerButton = answersContainer.querySelector(".answer-button:nth-child(3)");
+    if (answerButton) {
+        answerButton.click();
+    }
+} else if (event.key === "4" || event.key === "NumPad4") {
+    // '4' or 'NumPad4' key pressed, select answer 4
+    const answerButton = answersContainer.querySelector(".answer-button:nth-child(4)");
+    if (answerButton) {
+        answerButton.click();
+    }
+} else if (event.key === "Tab" ) {
+    // 'Tab', 'r', or 'R' key pressed, focus and activate the "Play Again" button
+    playAgainButton.focus();
+    playAgainButton.click();
+}
+}); // end of Keyboard event listener
+
+
+</script>  
+</body>
+</html>

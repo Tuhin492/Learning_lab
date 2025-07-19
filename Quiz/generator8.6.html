@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MCQ Generator</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+/* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+body {
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+}
+    #header{ /* heading*/
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      height: 7vh;
+    }
+      .leftdiv{ /* It is the div that keeps exit and btn at left as well as separately arrange and preview button as right*/
+        display: flex;
+        align-items: center;
+      }
+        #exit { /* exit button*/
+            background-color: #28a745;
+            color: #ffff;
+            font-size: 22px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 5px;
+            padding: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 4;
+        } #exit:hover{background-color: #218838;}
+        
+        #btn { /* button for information panel*/
+            background-color: #28a745;
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin: 5px;
+            height: 38px;
+            width: 38px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 2;
+        }#btn:hover {background-color: #218838;}
+
+
+
+
+
+
+/*The following is Sidebar (Informaiton panel)*/        
+                  #sidebar { background:#e9fef7;
+                            position: fixed;
+                            top: 0;
+                            right: 0;
+                            width: 60%; /* Adjust width as needed for mobile view */
+                            height: 100%;
+                            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+                            padding: 20px;
+                            overflow-y: auto;
+                            display: none;
+                            z-index: 5; 
+                            }
+                            h6{
+                              font-size: 40px;
+                              margin: 10px auto;
+                              width: max-content
+                            }
+
+                            .javascriptcontent {
+                              margin:auto;
+                              width: 99%;
+                            }
+                                #javagreekletters {
+                                  width: 15px;
+                                }
+                                .javascriptcontent li{
+                                  list-style: none;
+                                  width: 100%;
+                                  margin: 10px 0px 10px 0px;
+                                  border-radius: 8px;
+                                  background: #e9fef7;
+                                  box-shadow: 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
+                                              -6px -6px 10px -1px rgba(255, 255, 255, 0.7);
+                                              
+                                }
+                                .javascriptcontent label {
+                                  display: flex;
+                                  align-items: center;
+                                  padding: 10px;
+                                  font-size: 18px;
+                                  font-weight: 500;
+                                  cursor: pointer;
+                                }
+                                label::before {
+                                  content: '+';
+                                  margin-right: 10px;
+                                  font-size: 24px;
+                                  font-weight: 600;
+                                }
+                                input[type="radio"]{
+                                  display: none;
+                                }
+                                .javascriptcontent .content{
+                                  padding: 0 10px;
+                                  line-height: 26px;
+                                  max-height: 0;
+                                  overflow: hidden;
+                                  transition: max-height 0.5s, padding 0.5s;
+                                }
+                                .javascriptcontent input[type="radio"]:checked + label + .content{
+                                  max-height: 600px;
+                                  padding: 0 10px 5px 10px;
+                                  overflow-y: auto;
+
+                                }
+                                .javascriptcontent input[type="radio"]:checked + label::before{
+                                  content: '-';
+                                }
+                                .javascriptcontent p{
+                                  display: inline; /*for displaying the content of sidebar to as not a block object*/
+                                }
+                                /*The following is for making violet color splash effect upon clicking on the copy button*/
+                                .javascriptcontent button {
+                                  background-color: #28a745; /* Light gray default */
+                                  color: #fff;
+                                  border: none;
+                                  height: 22px;
+                                  width: 21px;
+                                  padding: 2px;
+                                  cursor: pointer;
+                                  border-radius: 5px;
+                                  transition: background-color 0.1s; /* Smooth color transition */
+                                  text-align: center;  /* Centers inline elements */
+                                  line-height: 1.5em;
+                              }
+
+                              .javascriptcontent button:active {
+                                  background-color: #a7285d !important; /* Violet when clicked */
+                              }
+      .singleMicon{
+        display: inline-block;
+        width: 30px;
+        height: 40px;
+        background-image: url("mcqgenicon.svg");
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+      }                        
+      h1 { /* MCQ Generator (text)*/
+          text-align: center;
+          margin: 5px;
+      }
+        
+        #previewbtn{ /* button for preview panel access*/
+            background-color: #28a745;
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin: 5px;
+            height: 38px;
+            width: 38px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 4; 
+          } 
+
+
+        #flip{
+          background-color: #28a745;
+          color: white;
+          border: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 24px;
+          margin: 5px;
+          height: 38px;
+          width: 38px;
+          border-radius: 5px;
+          cursor: pointer;
+          z-index: 2;
+        }#previewbtn:hover, #flip:hover{background-color: #218838;}
+
+
+
+
+
+/*The following is  Preview panel*/
+
+                        #previewpanel { /*It is previewpanel*/
+                          position: fixed;
+                          height: 100vh;
+                          width: 100vw;
+                          background-color: #e9fef7;
+                          display: grid;
+                          column-gap: 15px;
+                          grid-template-columns: 0.8fr 2fr 1.4fr;
+                          grid-template-rows: 2vh auto;
+                          margin: 0;
+                          padding-top: 47px;
+                          align-items: start;
+                          overflow-y: auto;
+                          z-index: 3;
+                          visibility: hidden;
+                          opacity: 0;
+                          transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+                          pointer-events: none; /* Prevent interaction when hidden */
+                        }
+                        
+                                /* <div id="question-set-select">*/
+                                  #question-set-select {
+                                    background-color: transparent;
+                                    border: 3px solid rgba(141, 141, 141, 0.5);
+                                    backdrop-filter: blur(3px);
+                                    height: 10vh;
+                                    border-radius: 10px;
+                                    padding: 15px 15px 100px 10px;
+                                    display: flex;
+                                    flex-direction: column;
+                                    gap: 10px;
+                                    margin-left: 3%;
+                                  }
+                                    #quizlabel{
+                                      color: #777777;
+                                      opacity: 0.6;
+                                      font-size: 25px;
+                                    }
+                                    #question-set{
+                                      opacity: 0.6;
+                                      font-size: 20px;
+                                      width: 100%;
+                                      border-radius: 20px;
+                                      cursor: pointer;
+                                    }
+
+                                /* <div id="quiz-container"> */
+                                  #quiz-container {
+                                    background-color: transparent;
+                                    border: 3px solid rgba(141, 141, 141, 0.5);
+                                    backdrop-filter: blur(3px);
+                                    min-height: 80vh;
+                                    padding: 20px;
+                                    border-radius: 10px;
+                                    text-align: center;
+                                    display: flex;
+                                    flex-grow: 0;              /* not needed, but explicit */
+                                    flex-shrink: 0;
+                                    flex-basis: auto;
+                                    height: auto;              /* allow height to grow naturally */
+                                    overflow: visible;  
+                                    flex-direction: column;
+                                    align-items: center;
+                                    justify-content: start;
+                                   }
+                                    #question-number{
+                                      color: #000000;
+                                      font-size: 25px;
+                                    }
+                                    #question-container {
+                                      margin-bottom: 20px;
+                                    }
+                                      #question{
+                                        color: #000000;
+                                        font-size: 21px;
+                                        text-align: justify;
+                                      }
+                                      .answer-button {
+                                        background: #fff;
+                                        opacity: 0.8;
+                                        color: #222;
+                                        font-size: 20px;
+                                        font-weight: 500;
+                                        width: 85%;
+                                        border: 1px solid #222;
+                                        padding: 10px;
+                                        margin: 10px 0;
+                                        text-align: left;
+                                        border-radius: 20px;
+                                        cursor: pointer;
+                                        transition: all 0.3s;
+                                      }
+                                      .score-number{
+                                        color: #777777;
+                                        display: block;
+                                        margin: 5px;
+                                      }
+                                      p {
+                                        color: #777777;
+                                        display: inline-block;
+                                        margin: 5px;
+                                      }
+                                      #prev-button{
+                                        font-size: 20px;
+                                        background:transparent;
+                                        background-color: rgba(255, 255, 255, 0.2);
+                                        color: #777777;
+                                        font-weight: 10px;
+                                        width: 150px;
+                                        border: 0;
+                                        padding: 10px;
+                                        margin: 20px auto 0;
+                                        border-radius: 20px 0px 0px 20px;
+                                        cursor: pointer;
+                                      }
+                                      #next-button{
+                                        font-size: 20px;
+                                        background:transparent;
+                                        background-color: rgba(255, 255, 255, 0.2);
+                                        color: #777777;
+                                        font-weight: 10px;
+                                        width: 150px;
+                                        border: 0;
+                                        padding: 10px;
+                                        margin: 20px auto 0;
+                                        border-radius: 0px 20px 20px 0px; 
+                                        cursor: pointer;
+                                      }
+                                      #play-again-button{
+                                        align-self: center;
+                                        font-size: 30px;
+                                        background:transparent;
+                                        background-color: rgba(255, 255, 255, 0.2);
+                                        color: #777777;
+                                        font-weight: 500;
+                                        height: 50px;
+                                        width: 50px;
+                                        border: none;
+                                        margin: 10px auto 0;
+                                        border-radius: 50%; 
+                                        cursor: pointer;
+                                      }
+                                      #description-box {
+                                        background-color: transparent;
+                                        border: 3px solid rgba(141, 141, 141, 0.5);
+                                        backdrop-filter: blur(3px);
+                                        border-radius: 10px;
+                                        margin-top: auto;
+                                        padding: 5px;
+                                        width: 98%; 
+                                        align-self: center;
+                                        text-align: justify;
+                                      }
+                                        #description-text {
+                                          color: #000000;
+                                          font-size: 18px;
+                                          font-family: calibri;
+                                        } 
+
+                                /* <div id="questionpanel"> */
+                                  #questionpanel {
+                                    border-radius: 10px;
+                                    border: 3px solid rgba(141, 141, 141, 0.5);
+                                    height: 90vh;
+                                    width: 97%;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-content: flex-start;
+                                    gap: 10px;
+                                    font-size: 24px;
+                                  }
+                                    #question-number-list {
+                                      background-color: transparent;
+                                      backdrop-filter: blur(3px);
+                                      border-radius: 10px;
+                                      align-self: flex-start;
+                                      height: 100%;
+                                      width: 100%;
+                                      display: flex;
+                                      flex-wrap: wrap;
+                                      justify-content: flex-start;
+                                      align-content: flex-start;
+                                      overflow-y: auto;
+                                    }
+                                      #question-number-list button {
+                                        opacity: 0.8;
+                                        margin: 0.3em;
+                                        height: 2.8em;
+                                        width: 2.8em;
+                                        border-radius: 50%;
+                                        cursor: pointer;
+                                        text-align: center;
+                                      }
+                                      .highlighted {
+                                        background-color: black;
+                                        color: white;
+                                      }
+
+
+    #workarea{ /*working area*/
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+      width: 100%;
+      height: 93vh; /* Adjust height as needed */
+    }
+      #mcqForm { /*form which contains question, options, description, dropdowm and submitbutton*/
+        background: white;
+        width: 50%;
+        height: 93vh;
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        align-self: flex-start;
+        z-index: 1;
+      } 
+        #questionInput{/*question input*/
+          padding: 15px;
+          margin-bottom: 15px; 
+          width: 100%;
+          }
+        input{ /*options (four) input*/
+          margin-top: 5px;
+          width: 95%;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          font-size: 20px;
+        }
+        #descriptionInput { /*description*/
+          height: 150px;
+          width: 100%;
+          padding: 10px;
+          margin-top: 20px;
+          margin-bottom: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          font-size: 16px;
+        }
+        #correctOption { /*dropdown*/
+          width: 49%;
+          padding: 10px;
+          margin-top: 5px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          font-size: 16px;
+        }
+        #submitbuttom { /*Generate MCQ*/
+          background-color: #28a745;
+          color: white;
+          font-size: 18px;
+          border: none;
+          padding: 10px;
+          width: 49%;
+          cursor: pointer;
+          border-radius: 5px;
+        }#submitbuttom:hover { background-color: #218838; }
+
+
+
+      #myBox { /*Output after generate mcq  (coded javascript)*/
+        background: #fff;
+        width: 50%;
+        height: 93vh;
+        padding: 5px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border: none;
+        transition: all 0.3s ease-in-out;
+      } #myBox.fullscreen-mode {
+          position: fixed;
+          top: 1vh;
+          right: 1vw;
+          width: 98vw !important;
+          height: 97vh !important;
+          padding: 20px 0 20px 20px;
+          border-radius: 20px;
+          z-index: 10;
+          box-shadow:  20px rgba(0, 0, 0, 0.4);
+          transition: all 0.3s ease-in-out;
+        }
+
+        #myBox .toggle-button {
+          background: none;
+          border: none;
+          font-size: 18px;
+          color: #444;
+          cursor: pointer;
+          z-index: 5;
+        }
+
+        #mcqOutput{
+          margin-top: 10px;
+          height: 95%;
+          width: 99%;
+          overflow: auto;
+          white-space: nowrap;
+          resize: none; /* Disables dragging */
+          border: none;
+          outline: none;
+        } #mcqOutput::placeholder {font-size: 20px;text-align: center; position: absolute;top: 50%;left: 50%; transform: translate(-50%, -50%);} /*for specifically placeholder text of mcqOutput*/
+      
+
+
+
+
+
+
+
+/*The following is For mobile view */
+
+@media screen and (max-width: 1000px) {
+  #workarea{ /*working area*/
+  display: flex;
+  flex-direction: column;
+  height: 140vh;
+  }
+
+  #myBox { /*Output after generate mcq*/
+    width: 100%;
+    height: 70vh;
+    align-self: center;
+  } #myBox.fullscreen-mode {
+      top: auto;
+      bottom: 1vh;
+      right: 1vw;
+    }
+
+    #mcqForm { /*form which contains question, options, description, dropdowm and submitbutton*/
+            width: 100%;
+            height: 70vh;
+            align-self: center;
+    }
+                
+
+/*The following is for preview panel*/
+      #previewpanel {
+        flex-direction: column;
+        align-items: center; /* Centers items in column layout */
+        overflow-y: auto;
+        height: auto;
+      }
+  #question-set-select,#quiz-container {
+        width: 90%; /* Adjust width for better fit */
+        max-width: 100%;
+        margin: 10px 0; /* Add spacing between elements */
+        align-self: center;
+        
+    }
+    #quiz-container {
+        overflow-x: auto;
+        display: block;
+    }
+    #question-container{
+        overflow-x: auto; /* Enable horizontal scrolling */
+
+    }
+
+    #question-set-select{
+       padding: 1px; 
+        border: none;
+        margin: 0;
+    }
+    label{
+        display:none;
+    }
+    #question-set{
+        width: 90%;
+        overflow-x: auto;
+    }
+    #search-question-set{
+        position: relative;
+        top: 1px;
+        width: 80%;
+        z-index: 3;
+    }
+    #question-number{
+        font-size: 15px;
+        font-weight: bold;
+        overflow-x: auto;
+    }
+    #question{
+        font-size: 15px;
+        overflow-x: auto;
+    }
+    .answer-button{
+        font-size: 15px;
+    }
+    #prev-button,#next-button{
+        font-size: 15px;
+        border: 1px solid rgba(0, 0, 0, 1);
+    }
+    #play-again-button{
+    border: 1px solid rgba(0, 0, 0, 1);
+    line-height: 4px;
+    }
+    .score-number{
+        font-size: 10px;
+        display: inline;
+        margin: 0;
+    }
+    .score-number{
+        font-size: 10px;
+        display: inline;
+        margin: 0;
+    }
+    p{
+        font-size: 10px;
+        margin: 0; 
+    }
+    #description-box{
+        width: 99%;
+        overflow-x: auto;
+        
+    }
+    .description-box img {
+    max-width: 100% !important; /* Image will never be wider than its container */
+    height: auto !important; /* Maintain aspect ratio */
+}
+    #description-text{
+        font-size: 13px;
+    }
+    .heading {
+       display: none;
+    }
+
+    #question-number-list {
+        width: 98%; /* Adjust width for better fit */
+        max-width: 100%;
+        margin: 10px 0; /* Add spacing between elements */
+        align-self: center;
+        height: auto;
+        max-height: 300px; /* Prevent it from taking too much space */
+    }
+    #question-number-list button{
+        height: 30px;
+        width: 30px;
+        font-size: 10px;
+        text-indent: -2px;
+    }
+        
+        }
+
+
+  </style>
+</head>
+<body>
+  <div id="header"> 
+    <div class="leftdiv">
+      <button id="exit" type="button" title="Exit"><i class="fa-solid fa-right-from-bracket"></i></button>
+      <button id="btn" type="button" title="Information Panel" onclick="showhide()">
+        <i class="fa-solid fa-info"></i>
+      </button>
+            <div id="sidebar">
+              <h6>Information Panel</h6>
+              <h2>Shortcut keys</h2>
+                <ul class="javascriptcontent">
+                  <li>
+                    <input type="radio" name="javascriptcontent" id="hotkeys">
+                    <label for="hotkeys">Hot keys</label>
+                    <div class="content">
+                      <b>Choosing the correct options</b>:<br>
+                      Ctrl+ Alt + numpad 1 [for option 1]<br>
+                      Ctrl+ Alt + numpad 2 [for option 2]<br>
+                      Ctrl+ Alt + numpad 3 [for option 3]<br>
+                      Ctrl+ Alt + numpad 4 [for option 4]
+                      <br>
+                      <b>Pressing "Generate MCQ" button</b>:<br>
+                      Ctrl + enter
+                      <br>
+                      <b>Show/Hide Information Panel</b>:<br>
+                      Ctrl + Alt + numpad 0
+                      <br>
+                      <b>Html tags</b>:<br>
+                      Ctrl + B                    [for &lt;b&gt;]<br>
+                      Ctrl + Alt + B              [for &lt;/b&gt;]<br>
+                      Ctrl + U                    [for &lt;u&gt;]<br>
+                      Ctrl + Alt + U              [for &lt;/u&gt;]<br>
+                      Ctrl + I                    [for &lt;i&gt;]<br>
+                      Ctrl + Alt + I              [for &lt;/i&gt;]<br>
+                      Ctrl + Alt + fullstop(.)    [for &lt;br&gt;]<br>
+                      Ctrl + Alt + quote(')       [for \\u0022 (" ")]<br>
+                      Ctrl + Alt + *              [for \\u00D7 (×)]<br>
+                      Ctrl + Alt + /              [for \\u00F7 (÷)]<br>
+                    </div>
+                  </li>
+                </ul>
+                <h2>Html Tags</h2>
+                <ul class="javascriptcontent">
+                  <li>
+                    <input type="radio" name="javascriptcontent" id="htmlpic" checked>
+                    <label for="htmlpic">Picture tags</label>
+                    <div class="content">
+                      <b>Picture (PNG)</b>:<br>
+                      <button onclick="copyText('p1')">&#x29C9;</button> <p id="p1"> &lt;img src='pictures/typeimgname.png' style='width: 300px; height: auto;'&gt;</p>
+                      <br>
+                      <b>Picture (JPEG/JPG)</b>:<br>
+                      <button onclick="copyText('p2')">&#x29C9;</button> <p id="p2"> &lt;img src='pictures/typeimgname.jpg' style='width: 300px; height: auto;'&gt;</p>
+                      <br>
+                      <br>
+                      <b>Centered Picture (PNG)</b>:<br>
+                      <button onclick="copyText('p3')">&#x29C9;</button> <p id="p3"> &lt;img src='pictures/typeimgname.png' style='width: 300px; height: auto; display: block; margin: 0 auto;'&gt;</p>
+                      <br>
+                      <b>Centered Picture (JPEG/JPG)</b>:<br>
+                      <button onclick="copyText('p4')">&#x29C9;</button> <p id="p4"> &lt;img src='pictures/typeimgname.jpg' style='width: 300px; height: auto; display: block; margin: 0 auto;'&gt;</p>
+                    </div>
+                  </li>
+                  <li>
+                    <input type="radio" name="javascriptcontent" id="htmltable">
+                    <label for="htmltable">Table tags</label>
+                    <div class="content">
+                      
+                        <b>Matching Columns (4&#215;4)</b>: <br>
+                        <button onclick="copyText('t1')">&#x29C9;</button>
+                        <p id="t1">
+                              &lt;table border=''&gt; 
+                                        &lt;tr&gt;&lt;th&gt;Column I&lt;/th&gt;&lt;th&gt; Column II&lt;/th&gt;&lt;/tr&gt; 
+                                        &lt;tr&gt;&lt;td&gt;a) &lt;/td&gt;&lt;td&gt;i) &lt;/td&gt;&lt;/tr&gt; 
+                                        &lt;tr&gt;&lt;td&gt;b) &lt;/td&gt;&lt;td&gt;ii) &lt;/td&gt;&lt;/tr&gt; 
+                                        &lt;tr&gt;&lt;td&gt;c) &lt;/td&gt;&lt;td&gt;iii) &lt;/td&gt;&lt;/tr&gt; 
+                                        &lt;tr&gt;&lt;td&gt;d) &lt;/td&gt;&lt;td&gt;iv) &lt;/td&gt;&lt;/tr&gt; 
+                                    &lt;/table&gt;
+                        </p><br>
+                        <b>Matching Columns (3&#215;3)</b>: <br>
+                        <button onclick="copyText('t2')">&#x29C9;</button>
+                        <p id="t2">
+                        &lt;table border=''&gt; 
+                                  &lt;tr&gt;&lt;th&gt;Column I&lt;/th&gt;&lt;th&gt; Column II&lt;/th&gt;&lt;/tr&gt; 
+                                  &lt;tr&gt;&lt;td&gt;a) &lt;/td&gt;&lt;td&gt;i) &lt;/td&gt;&lt;/tr&gt; 
+                                  &lt;tr&gt;&lt;td&gt;b) &lt;/td&gt;&lt;td&gt;ii) &lt;/td&gt;&lt;/tr&gt; 
+                                  &lt;tr&gt;&lt;td&gt;c) &lt;/td&gt;&lt;td&gt;iii) &lt;/td&gt;&lt;/tr&gt;
+                              &lt;/table&gt;
+                        </p><br>
+                        <b>Basic table [no header] (4&#215;4)</b>: <br>
+                        <button onclick="copyText('t3')">&#x29C9;</button>
+                        <p id="t3">
+                        &lt;table border=''&gt;
+                                  &lt;tr&gt;&lt;td&gt;a) &lt;/td&gt;&lt;td&gt;i) &lt;/td&gt;&lt;/tr&gt; 
+                                  &lt;tr&gt;&lt;td&gt;b) &lt;/td&gt;&lt;td&gt;ii) &lt;/td&gt;&lt;/tr&gt; 
+                                  &lt;tr&gt;&lt;td&gt;c) &lt;/td&gt;&lt;td&gt;iii) &lt;/td&gt;&lt;/tr&gt; 
+                                  &lt;tr&gt;&lt;td&gt;d) &lt;/td&gt;&lt;td&gt;iv) &lt;/td&gt;&lt;/tr&gt; 
+                              &lt;/table&gt;
+                        </p><br>
+                        <b>Basic table [no header] (3&#215;3)</b>: <br>
+                        <button onclick="copyText('t4')">&#x29C9;</button>
+                        <p id="t4">
+                        &lt;table border=''&gt;
+                                  &lt;tr&gt;&lt;td&gt;a) &lt;/td&gt;&lt;td&gt;i) &lt;/td&gt;&lt;/tr&gt; 
+                                  &lt;tr&gt;&lt;td&gt;b) &lt;/td&gt;&lt;td&gt;ii) &lt;/td&gt;&lt;/tr&gt; 
+                                  &lt;tr&gt;&lt;td&gt;c) &lt;/td&gt;&lt;td&gt;iii) &lt;/td&gt;&lt;/tr&gt; 
+                              &lt;/table&gt;
+                        </p><br>
+                        <b>Basic table [no header] (2&#215;2)</b>: <br>
+                        <button onclick="copyText('t5')">&#x29C9;</button>
+                        <p id="t5">
+                        &lt;table border=''&gt;
+                                  &lt;tr&gt;&lt;td&gt;a) &lt;/td&gt;&lt;td&gt;i) &lt;/td&gt;&lt;/tr&gt; 
+                                  &lt;tr&gt;&lt;td&gt;b) &lt;/td&gt;&lt;td&gt;ii) &lt;/td&gt;&lt;/tr&gt; 
+                              &lt;/table&gt;
+                        </p><br>
+                        <b>Alternatives for Matching/Table</b><br>
+                        <button onclick="copyText('t6')">&#x29C9;</button>
+                        <p id="t6">a-type, b-type, c-type, d-type
+                        </p><br>
+                        <button onclick="copyText('t7')">&#x29C9;</button>
+                        <p id="t7"> i-type, ii-type, iii-type, iv-type
+                        </p><br>
+                        <button onclick="copyText('t8')">&#x29C9;</button>
+                        <p id="t8"> A-type, B-type, C-type, D-type
+                        </p><br>
+                        <button onclick="copyText('t9')">&#x29C9;</button>
+                        <p id="t9"> 1-type, 2-type, 3-type, 4-type
+                        </p><br>
+                    </div>
+                  </li>
+                  <li>
+                    <input type="radio" name="javascriptcontent" id="htmlothers">
+                    <label for="htmlothers">Other tags</label>
+                    <div class="content">
+                      
+                        <button onclick="copyText('o1')">&#x29C9;</button>
+                        <p id="o1">&lt;u&gt;&lt;/u&gt;</p> for underline [Ctrl+U and Ctrl+Alt+U respectively]
+                        <br>
+                        <button onclick="copyText('o2')">&#x29C9;</button>
+                        <p id="o2">
+                        &lt;b&gt;&lt;/b&gt;</p> for bold [Ctrl+B and Ctrl+Alt+B respectively]
+                        <br>
+                        <button onclick="copyText('o3')">&#x29C9;</button>
+                        <p id="o3">
+                        &lt;i&gt;&lt;/i&gt;</p> for italic [Ctrl+I and Ctrl+Alt+I respectively]
+                        <br>
+                        <button onclick="copyText('o4')">&#x29C9;</button>
+                        <p id="o4">
+                        &lt;br&gt;</p> for line break [Ctrl+.]
+                        <br>
+                        <button onclick="copyText('o5')">&#x29C9;</button>
+                        <p id="o5">
+                        &lt;sup&gt;&lt;/sup&gt;</p> for superscript
+                        <br>
+                        <button onclick="copyText('o6')">&#x29C9;</button>
+                        <p id="o6">
+                        &lt;sub&gt;&lt;/sub&gt;</p> for subscript
+                        <br>
+                      
+                    </div>
+                  </li>
+                </ul>
+                <h2>Javascript Unicodes</h2>
+                <ul class="javascriptcontent">
+                  <li>
+                    <input type="radio" name="javascriptcontent" id="javasymbols">
+                    <label for="javasymbols">Symbols</label>
+                    <div class="content">
+                      <button onclick="copyText('s1')">&#x29C9;</button>
+                        <p id="s1">
+                        \u0022</p> for double quotes (“ ”)<br>
+                        <button onclick="copyText('s2')">&#x29C9;</button>
+                        <p id="s2">
+                        \u00B0</p> for degree sign (°)<br>
+                        <button onclick="copyText('s3')">&#x29C9;</button>
+                        <p id="s3">
+                        \u00C5</p> for angstrom (Å)<br>
+                    </div>
+                  </li>
+                  <li>
+                    <input type="radio" name="javascriptcontent" id="javamathsymbols">
+                    <label for="javamathsymbols">Mathematical Symbols</label>
+                    <div class="content">
+                      <button onclick="copyText('m1')">&#x29C9;</button>
+                        <p id="m1">
+                        \u00D7</p> for multiply(×) sign<br>
+                        <button onclick="copyText('m2')">&#x29C9;</button>
+                        <p id="m2">
+                        \u00F7</p> for divide(÷) sign<br>
+                        <button onclick="copyText('m3')">&#x29C9;</button>
+                        <p id="m3">
+                        \u2248</p> for Almost equal to sign (≈)<br>
+                        <button onclick="copyText('m4')">&#x29C9;</button>
+                        <p id="m4">
+                        \u2192</p> for arrow sign (→)<br>
+                      
+                    </div>
+                  </li>
+                  <li>
+                    <input type="radio" name="javascriptcontent" id="javagreekletters">
+                    <label for="javagreekletters">Greek Letters</label>
+                    <div class="content">
+                      <button onclick="copyText('g1')">&#x29C9;</button>
+                      <p id="g1">
+                      \u03B1</p> for alpha (α)<br>
+                      <button onclick="copyText('g2')">&#x29C9;</button>
+                      <p id="g2">
+                      \u03B2</p> for beta (β)<br>
+                      <button onclick="copyText('g3')">&#x29C9;</button>
+                      <p id="g3">
+                      \u03C9</p> for small omerga (ω)<br>
+                      <button onclick="copyText('g4')">&#x29C9;</button>
+                      <p id="g4">
+                      \u03A0</p> for Π<br>
+                      
+                    </div>
+                  </li>
+                  <li>
+                    <input type="radio" name="javascriptcontent" id="javacurrency">
+                    <label for="javacurrency">Currency</label>
+                    <div class="content">
+                      <button onclick="copyText('c1')">&#x29C9;</button>
+                      <p id="c1">
+                      \u20B9</p> for rupee sign (₹)<br>
+                      
+                    </div>
+                  </li>
+                  <li>
+                    <input type="radio" name="javascriptcontent" id="javageo">
+                    <label for="javageo">Geometric Shapes</label>
+                    <div class="content">
+                      <button onclick="copyText('gs1')">&#x29C9;</button>
+                      <p id="gs1">
+                        \u25B3</p> for △<br>
+                        <button onclick="copyText('gs2')">&#x29C9;</button>
+                      <p id="gs2">
+                        \u25BD</p> for ▽<br>
+                        <button onclick="copyText('gs3')">&#x29C9;</button>
+                      <p id="gs3">
+                        \u25A1</p> for □<br>
+                        <button onclick="copyText('gs4')">&#x29C9;</button>
+                      <p id="gs4">
+                        \u25A0</p> for ■<br>
+                        <button onclick="copyText('gs5')">&#x29C9;</button>
+                      <p id="gs5">
+                        \u25CB</p> for ○<br>
+                        <button onclick="copyText('gs6')">&#x29C9;</button>
+                      <p id="gs6">
+                        \u2022</p> for •<br>
+                      
+                    </div>
+                  </li>
+                  <li>
+                    <input type="radio" name="javascriptcontent" id="javaemoji">
+                    <label for="javaemoji">Emojis</label>
+                    <div class="content">
+                      <button onclick="copyText('e1')">&#x29C9;</button>
+                      <p id="e1">
+                        \u{1F7E5}</p> for &#x1F7E5;<br>
+                        <button onclick="copyText('e2')">&#x29C9;</button>
+                      <p id="e2">
+                        \u{1F7EA}</p> for &#x1F7EA;<br>
+                        <button onclick="copyText('e3')">&#x29C9;</button>
+                      <p id="e3">
+                        \u{1F7E9}</p> for &#x1F7E9;<br>
+                        <button onclick="copyText('e4')">&#x29C9;</button>
+                      <p id="e4">
+                        \u{1F7E6}</p> for &#x1F7E6;<br>
+                      
+                    </div>
+                  </li>
+                </ul>
+            </div>
+    </div>
+
+    <div class="leftdiv">
+      <i class="singleMicon"></i>
+      <h1 title="MCQ Generator">MCQ Generator</h1>
+    </div>
+
+    <div class="leftdiv">
+      <button id="flip" type="button" title="Flip Questionsets">
+        <i class="fa-solid fa-repeat"></i>
+      </button>
+      <button id="previewbtn" type="button" title="Preview Panel" onclick="runpreview()">
+        <i id="previewicon" class="fa-solid fa-eye"></i>
+      </button>
+          
+    </div>
+      <div id="previewpanel">
+
+              <div id="question-set-select">
+                <label id="quizlabel">Preview Panel</label>
+                <select id="question-set" onchange="changeQuestionSet()">
+                      <option value="englishtestblogcommiscellaneous">Output preview</option>   
+                </select>
+              </div>
+
+              <div id="quiz-container">
+                <div id="question-number">Question 1</div>
+                <div id="question-container">
+                    <p id="question"></p>
+                </div>
+                <div id="answers-container">
+                    <!-- Answers will be inserted here dynamically -->
+                </div>
+                <div id="score-container">
+                    <p class="score-number">Score: <span id="score">0</span></p>
+                    <p>Correct: <span id="correct-answers">0</span></p>
+                    <p>Wrong: <span id="wrong-answers">0</span></p>
+                </div>
+                <div class="interact">
+                    <button id="prev-button">Previous</button>
+                    <button id="next-button">Next</button>
+                    <br>
+                    <button id="play-again-button">&#8635</button>
+                </div>
+                
+                <div id="description-box" style="display: none;">
+                    <p id="description-text"></p>
+                </div>
+            </div>
+
+            <div id="questionpanel">
+              <div id="question-number-list"></div>
+            </div>
+          </div>
+  </div>
+  <div id="workarea">
+    <form id="mcqForm">
+      <input type="text" id="questionInput" required placeholder="Question"><br>
+      <input type="text" id="option1Input" required placeholder="Option 1"><br>
+      <input type="text" id="option2Input" required placeholder="Option 2"><br>
+      <input type="text" id="option3Input" required placeholder="Option 3"><br>
+      <input type="text" id="option4Input" required placeholder="Option 4"><br>
+      
+      <textarea id="descriptionInput" placeholder="Description (optional)"></textarea><br>
+    
+      <select id="correctOption" required>
+        <option value="">Select Right Answer</option>
+        <option value="1">Option 1</option>
+        <option value="2">Option 2</option>
+        <option value="3">Option 3</option>
+        <option value="4">Option 4</option>
+      </select>
+      
+      <input type="submit" id="submitbuttom" value="Generate MCQ" title="Generate MCQ">
+    </form>
+
+    <!-- The generated MCQs will be displayed here -->
+    
+    <div class="box" id="myBox">
+      <button class="toggle-button" id="toggleBtn" title="expand" onclick="toggleFullscreen()">
+        <i class="fas fa-up-right-and-down-left-from-center"></i>
+      </button>
+      <textarea id="mcqOutput" placeholder="Generated MCQ here..."></textarea>
+    </div>
+  </div>
+
+
+
+<script>
+// ================== GLOBAL VARIABLES ==================
+let currentQuestions = [];
+let previewInitialized = false;
+
+// ================== SIDEBAR FUNCTIONS ==================
+function showhide() {
+    const sidebar = document.getElementById("sidebar");
+    sidebar.style.display = sidebar.style.display === "block" ? "none" : "block";
+}
+
+function copyText(pId) {
+    const text = document.getElementById(pId).innerText;
+    const temp = document.createElement("textarea");
+    temp.value = text;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand("copy");
+    document.body.removeChild(temp);
+    
+    document.querySelectorAll("button").forEach(btn => btn.classList.remove("copied"));
+    event.target.classList.add("copied");
+    document.addEventListener("input", resetButtonColors);
+    document.addEventListener("click", resetButtonColors);
+}
+
+function resetButtonColors() {
+    document.querySelectorAll("button").forEach(btn => btn.classList.remove("copied"));
+    document.removeEventListener("input", resetButtonColors);
+    document.removeEventListener("click", resetButtonColors);
+}
+
+
+// ================== Flip FUNCTIONS ==================
+document.getElementById("flip").addEventListener("click", function () {
+    const output = document.getElementById("mcqOutput");
+    const text = output.value.trim();
+
+    if (!text) {
+        alert("No question set found to flip.");
+        return;
+    }
+
+    // Match blocks that start with { // number and end with }
+    const pattern = /{[\s]*\/\/[\s]*\d+[\s\S]*?}(?=,?\s*({|$))/g;
+    const questionBlocks = text.match(pattern);
+
+    if (!questionBlocks || questionBlocks.length < 2) {
+        alert("⚠ Not enough questions to flip.");
+        return;
+    }
+
+    // Preserve whether there was a trailing comma
+    const hasTrailingComma = /},\s*$/.test(text);
+
+    // Flip the blocks
+    const flipped = questionBlocks.reverse().join(',\n');
+
+    // Restore trailing comma if it was present
+    output.value = flipped + (hasTrailingComma ? ',\n' : '');
+});
+
+
+// ================== PREVIEW PANEL SYSTEM ==================
+function runpreview() {
+    const panel = document.getElementById("previewpanel");
+    const icon = document.getElementById("previewicon"); // 👈 Add this line
+
+    const rawText = document.getElementById("mcqOutput").value.trim();
+    const parsed = parseMCQOutput(rawText);
+
+    if (parsed.length === 0) {
+        alert("⚠ No valid MCQs found in the output.\nPlease check your format and try again.");
+        return;
+    }
+
+    // Toggle ON
+    if (panel.style.visibility !== "visible") {
+        panel.style.visibility = "visible";
+        panel.style.opacity = "1";
+        panel.style.pointerEvents = "auto";
+        initializePreview(parsed);
+
+        // 👁 Switch to "eye-slash" (preview visible)
+        if (icon) {
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        }
+    } else {
+        // Toggle OFF
+        panel.style.visibility = "hidden";
+        panel.style.opacity = "0";
+        panel.style.pointerEvents = "none";
+
+        // 👁 Switch back to "eye" (preview hidden)
+        if (icon) {
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    }
+}
+
+
+
+// ROBUST PARSER
+function parseMCQOutput(content) {
+    try {
+        const cleaned = content.replace(/\/\/.*$/gm, '').trim();
+        const wrapped = cleaned.startsWith("[") ? cleaned : `[${cleaned}]`;
+        return Function(`"use strict"; return ${wrapped}`)();
+    } catch (e) {
+        console.error("Parse error:", e);
+        return [];
+    }
+}
+
+//QUIZ LOGIC 
+function initializePreview(questions) {
+    const qEl = document.getElementById("question");
+    const numEl = document.getElementById("question-number");
+    const answersEl = document.getElementById("answers-container");
+    const scoreEl = document.getElementById("score");
+    const correctEl = document.getElementById("correct-answers");
+    const wrongEl = document.getElementById("wrong-answers");
+    const descBox = document.getElementById("description-box");
+    const descText = document.getElementById("description-text");
+    const listEl = document.getElementById("question-number-list");
+
+    let current = 0, score = 0, correct = 0, wrong = 0;
+
+    function render(index) {
+        const q = questions[index];
+        current = index;
+
+        numEl.textContent = `Question ${index + 1}`;
+        qEl.innerHTML = q.question || "";
+        descBox.style.display = "none";
+        descText.innerHTML = "";
+
+        answersEl.innerHTML = "";
+        (q.answers || []).forEach((ans) => {
+            const btn = document.createElement("button");
+            btn.className = "answer-button";
+            btn.innerHTML = ans;
+            btn.onclick = () => {
+                if (btn.disabled) return;
+
+                const isCorrect = ans === q.correct;
+
+                // Highlight all buttons
+                Array.from(answersEl.children).forEach(child => {
+                    const isThisCorrect = child.innerHTML === q.correct;
+                    if (isThisCorrect) {
+                        child.style.backgroundColor = "#28a745"; // green for correct
+                    } else if (child.innerHTML === ans) {
+                        child.style.backgroundColor = "#dc3545"; // red for wrong selection
+                    }
+                    child.disabled = true;
+                });
+
+                // Update score
+                if (isCorrect) {
+                    score++;
+                    correct++;
+                } else {
+                    wrong++;
+                }
+
+                scoreEl.textContent = score;
+                correctEl.textContent = correct;
+                wrongEl.textContent = wrong;
+
+                // Show description if present
+                if (q.description) {
+                    descBox.style.display = "block";
+                    descText.innerHTML = q.description;
+                }
+            };
+
+            answersEl.appendChild(btn);
+        });
+
+        updateNavList();
+    }
+
+    function updateNavList() {
+        listEl.innerHTML = "";
+        questions.forEach((_, i) => {
+            const btn = document.createElement("button");
+            btn.textContent = i + 1;
+            btn.className = i === current ? "highlighted" : "";
+            btn.onclick = () => render(i);
+            listEl.appendChild(btn);
+        });
+    }
+
+    document.getElementById("prev-button").onclick = () => {
+        if (current > 0) render(current - 1);
+    };
+    document.getElementById("next-button").onclick = () => {
+        if (current < questions.length - 1) render(current + 1);
+    };
+    document.getElementById("play-again-button").onclick = () => {
+        score = correct = wrong = 0;
+        scoreEl.textContent = correctEl.textContent = wrongEl.textContent = "0";
+        render(0);
+    };
+
+    render(0);
+}
+// ================== FORM HANDLING ==================
+document.getElementById("mcqForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    // Get form values
+    const question = document.getElementById("questionInput").value;
+    const options = [
+        document.getElementById("option1Input").value,
+        document.getElementById("option2Input").value,
+        document.getElementById("option3Input").value,
+        document.getElementById("option4Input").value
+    ];
+    const correctIndex = document.getElementById("correctOption").value;
+    const description = document.getElementById("descriptionInput").value;
+
+    // Validation
+    if (!correctIndex || options.some(opt => !opt.trim())) {
+        alert("Please fill all required fields!");
+        return;
+    }
+
+    // Count existing questions to determine numbering
+    const existingContent = document.getElementById("mcqOutput").value;
+    const questionNumber = (existingContent.match(/{/g) || []).length + 1;
+
+    // Build question object with automatic numbering
+    const mcqEntry = `{ // ${questionNumber}
+    question: "${question.replace(/"/g, '\\"')}",
+    answers: ["${options.map(opt => opt.replace(/"/g, '\\"')).join('", "')}"],
+    correct: "${options[correctIndex - 1].replace(/"/g, '\\"')}"${
+        description ? `,\n    description: "${description.replace(/"/g, '\\"').replace(/\n/g, "\\n")}"` : ""
+    }
+},\n`;
+
+    // Update mcqOutput (new question first)
+    const mcqOutput = document.getElementById("mcqOutput");
+    mcqOutput.value = mcqEntry + mcqOutput.value;  // Prepend instead of append
+
+    // Clear form
+    this.reset();
+    document.getElementById("questionInput").focus();
+});
+
+
+// ================== TOGGLE EXPAND ==================
+function toggleFullscreen() {
+  const box = document.getElementById("myBox");
+  const button = document.getElementById("toggleBtn");
+
+  const isFullscreen = box.classList.toggle("fullscreen-mode");
+
+  // Toggle icon based on state
+  button.innerHTML = isFullscreen
+    ? '<i class="fas fa-down-left-and-up-right-to-center"></i>'  // collapse icon
+    : '<i class="fas fa-up-right-and-down-left-from-center"></i>'; // expand icon
+}
+
+
+
+ // ================== HOT Keys ==================
+document.addEventListener("keydown", function(event) {
+const key = event.code;
+const activeElement = document.activeElement; // Get the focused input field
+
+// Handle Ctrl + Alt shortcuts
+if (event.ctrlKey && event.altKey) {
+switch (key) {
+  case "Numpad1":
+    document.getElementById("correctOption").value = "1";
+    break;
+  case "Numpad2":
+    document.getElementById("correctOption").value = "2";
+    break;
+  case "Numpad3":
+    document.getElementById("correctOption").value = "3";
+    break;
+  case "Numpad4":
+    document.getElementById("correctOption").value = "4";
+    break;
+  case "Numpad0": // Ctrl + Alt + Numpad 0 to toggle sidebar
+    showhide();
+    break;
+  case "KeyB": // Ctrl + Alt + B to insert </b>
+    event.preventDefault();
+    insertTextWithUndo(activeElement, "</b>");
+    break;
+    case "KeyU": // Ctrl + Alt + U to insert </u>
+    event.preventDefault();
+    insertTextWithUndo(activeElement, "</u>");
+    break;
+    case "KeyI": // Ctrl + Alt + I to insert </i>
+    event.preventDefault();
+    insertTextWithUndo(activeElement, "</i>");
+    break;
+  default:
+    break;
+}
+}
+
+// Handle Ctrl + B (Insert <b>)
+if (event.ctrlKey && !event.altKey && key === "KeyB") {
+event.preventDefault();
+insertTextWithUndo(activeElement, "<b>");
+}
+
+// Handle Ctrl + U separately (without Alt)
+if (event.ctrlKey && !event.altKey && key === "KeyU") {
+event.preventDefault(); // Prevent browser's underline shortcut
+if (activeElement && (activeElement.tagName === "INPUT" || activeElement.tagName === "TEXTAREA")) {
+insertTextWithUndo(activeElement, "<u>");
+}
+}
+
+// Handle Ctrl + I (Insert <i>)
+if (event.ctrlKey && !event.altKey && key === "KeyI") {
+event.preventDefault();
+insertTextWithUndo(activeElement, "<i>");
+}
+
+// Handle Ctrl + . , Ctrl + Numpad . (Insert <br>)
+if (event.ctrlKey && !event.altKey && (key === "Period" || key === "NumpadDecimal")) {
+event.preventDefault();
+insertTextWithUndo(activeElement, "<br>");
+}
+
+// Handle Ctrl + Numpad * (Insert \u00D7 as plain text)
+if (event.ctrlKey && !event.altKey && key === "NumpadMultiply") {
+event.preventDefault();
+insertTextWithUndo(activeElement, "\\u00D7");
+}
+
+// Handle Ctrl + Numpad / (Insert \u00F7 as plain text)
+if (event.ctrlKey && !event.altKey && key === "NumpadDivide") {
+event.preventDefault();
+insertTextWithUndo(activeElement, "\\u00F7");
+}
+
+// Handle Ctrl + ' (Insert \u0022 as plain text)
+if (event.ctrlKey && !event.altKey && key === "Quote") {
+event.preventDefault();
+insertTextWithUndo(activeElement, "\\u0022");
+}
+
+// Handle Ctrl + Enter to submit MCQ
+if (event.ctrlKey && event.key === "Enter") {
+document.getElementById("submitbuttom").click();
+}
+
+ // ✅ New: Ctrl + Alt + P triggers Preview button click
+  if (event.ctrlKey && event.altKey && key === "KeyP") {
+    event.preventDefault(); // Prevent any default behavior
+    const previewBtn = document.getElementById("previewbtn");
+    if (previewBtn) {
+      previewBtn.click();
+    }
+  }
+
+  // ✅ Ctrl + Alt + F → Click Flip Button
+  if (event.ctrlKey && event.altKey && key === "KeyF") {
+    event.preventDefault();
+    const flipBtn = document.getElementById("flip");
+    if (flipBtn) {
+      flipBtn.click();
+    }
+  }
+
+});
+
+
+
+
+
+
+// Function to insert text at cursor and keep undo history
+function insertTextWithUndo(input, text) {
+if (document.execCommand) {
+// Standard way: Keeps undo history
+document.execCommand("insertText", false, text);
+} else {
+// Fallback for browsers that don’t support execCommand
+const start = input.selectionStart;
+const end = input.selectionEnd;
+
+input.setRangeText(text, start, end, "end");
+}
+}
+
+
+
+
+
+
+
+// ================== WARNING FOR CLOSING WINDOW ==================
+/*
+window.addEventListener("beforeunload", function (event) {
+const confirmationMessage = "Are you sure you want to leave? Your changes may not be saved.";
+(event || window.event).returnValue = confirmationMessage;
+return confirmationMessage;
+});
+*/
+
+
+
+
+
+</script>
+</body>
+</html>
