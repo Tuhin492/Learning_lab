@@ -634,8 +634,24 @@
             <button id="filterlogo" type="button" onclick="filtericon()">&#10148;</button>
             
             <select id="question-set" onchange="changeQuestionSet()">
+                    <option value="selectquestionset" style="font-weight: lighter; color: rgb(125, 125, 125);">Select Questionset</option><hr>
                     
                     <!--self made questionSets-->
+                    <!--Parts of Speech-->
+                    <option value="partsofspeech" style="font-weight: bold; color: aqua;">Parts of Speech</option>
+                        <option value="nounandpronoun" style="font-weight: bold;">Noun and Pronoun</option>
+
+                        <option value="adjective" style="font-weight: bold;">Adjective</option>
+
+                        <option value="verbandadverb"style="font-weight: bold;">Verb and Adverb</option>
+                            <option value="phrasalverb">&nbsp Phrasal Verb</option>
+                        <option value="preposition"style="font-weight: bold;">Preposition</option>
+
+                        <option value="conjunctionandinterjuction"style="font-weight: bold;">Conjuction and Interjunction</option>
+
+                        
+                    <hr>
+                    <!--English Blog.com-->
                     <option value="englishtestblogcom"style="font-weight: bold;">English Blog.com</option>
                         <option value="englishtestblogcombasicgrammer">Basic Grammer (English Blog.com)</option>
                         <option value="englishtestblogcomnoun">Noun (English Blog.com)</option>
@@ -857,6 +873,7 @@
     
 
 <!--add Internal javascripts below-->
+    <script src="English Comprehension.js"></script>
     <script src="Englishtestblogcom.js"></script>
     <script src="Awareness.js"></script>
     <script src="FSSAI laws (act, rule, regulations).js"></script>
@@ -899,8 +916,20 @@
     // Define sets of questions below...
 const questionSets = {
     //start of question sets...
-
+        'selectquestionset': [],
     // internal or mostly self-made sets following...
+    
+        /*Parts of speech*/
+        'nounandpronoun': nounandpronoun = [],
+        'adjective': adjective = [],
+        'verbandadverb': verbandadverb = [...phrasalverb,],
+            'phrasalverb': phrasalverb,
+        'preposition': preposition = [],
+        'conjunctionandinterjuction': conjunctionandinterjuction = [],
+                /*Combined for Parts for Speech*/'partsofspeech': [...phrasalverb,],
+
+
+        /*English Blog.com*/
         'englishtestblogcom': englishtestblogcom = [...englishtestblogcombasicgrammer,...englishtestblogcomnoun,...englishtestblogcomverb,...englishtestblogcomadjective,...englishtestblogcomidioms,...englishtestblogcommiscellaneous,],
             'englishtestblogcombasicgrammer': englishtestblogcombasicgrammer,
             'englishtestblogcomnoun': englishtestblogcomnoun,
@@ -916,7 +945,7 @@ const questionSets = {
             'eatrightquestionbank4': eatrightquestionbank4,
         'awareness': awareness,
 
-
+        /*FSSA 2006*/
         'fss2006': fss2006 = [...fssact2006overview,...fssact2006c1,...fssact2006c2,...fssact2006c3,...fssact2006c4,...fssact2006c5,...fssact2006c6,...fssact2006c7,...fssact2006c8,...fssact2006c9,...fssact2006c10,...fssact2006c11,...fssact2006c12,],
             'fssact2006overview': fssact2006overview,
             'fssact2006c1': fssact2006c1,
@@ -1247,7 +1276,7 @@ function displayQuestion() {
         highlightCurrentQuestionNumber();
     } else {
         questionNumber.textContent = "";
-        questionContainer.textContent = "Quiz completed!";
+        questionContainer.textContent = "Select a Question set to begin with";
         answersContainer.innerHTML = "";
         prevButton.disabled = true;
         nextButton.disabled = true;
