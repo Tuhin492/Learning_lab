@@ -791,6 +791,8 @@
                         <option value="swacomputer"> (SWA) Computer Literacy</option>
                     <hr>
                     <!--pyqs add below-->
+                    <option value="pyqs" style="font-weight: bold; color: aqua;">PYQs</option>
+
                     <option value="fssaipyqs" style="font-weight: bold;">FSSAI PYQs</option>
                         
                         <option value="cfsopyq25072019">CFSO PYQ (25/07/2019)</option>
@@ -811,6 +813,8 @@
                         <option value="jpscfsopyq2023paper2">JPSC FSO PYQ 2023 paper 2</option>
                         <option value="jpscfsopyq2024paper1">JPSC FSO PYQ 2024 paper 1 (27/05/2024)</option>
                         <option value="jpscfsopyq2024paper2">JPSC FSO PYQ 2024 paper 2</option>
+                        <option value="tamilnadufso012022">Tamil Nadu MRB FSO PYQ 01 (2022)</option>
+                        <option value="tamilnadufso022022">Tamil Nadu MRB FSO PYQ 02 (2022)</option>
                         <option value="andrapdsfso2021">Andhra Pradesh FSO PYQ 2021</option>
                     <hr>
                     <!--write combine questionSets-->
@@ -1064,22 +1068,28 @@ const questionSets = {
 
 
     // pyqs following...
-        'fssaipyqs': fssaipyqs = [...assistantpyq24072019,...cfsopyq25072019,...cfsopyq30032022,...jpscfsopyq2023paper1,...jpscfsopyq2023paper2,...jpscfsopyq2024paper1,...jpscfsopyq2024paper2,...juniorassistantpyqgrade130032022,...personalassistantpyqshift329032022,...topyq25072019,...topyqshift130032022,...foodanalyst3pyqset1,],
-        'cfsopyq25072019': cfsopyq25072019,
-        'cfsopyq30032022':cfsopyq30032022,
-        'cfsopyq01102022': cfsopyq01102022,
-        'topyq25072019': topyq25072019,
-        'topyqshift130032022': topyqshift130032022,
-        'topyqshift201102022': topyqshift201102022,
-        'foodanalyst3pyqset1': foodanalyst3pyqset1,
-        'assistantpyq24072019': assistantpyq24072019,
-        'personalassistantpyqshift329032022': personalassistantpyqshift329032022,
-        'juniorassistantpyqgrade130032022': juniorassistantpyqgrade130032022,
-        'jpscfsopyq2023paper1': jpscfsopyq2023paper1,
-        'jpscfsopyq2023paper2': jpscfsopyq2023paper2,
-        'jpscfsopyq2024paper1': jpscfsopyq2024paper1,
-        'jpscfsopyq2024paper2': jpscfsopyq2024paper2,
-        'andrapdsfso2021': andrapdsfso2021,
+        'fssaipyqs': fssaipyqs = [...cfsopyq25072019,...cfsopyq30032022,...cfsopyq01102022,...topyq25072019,...topyqshift130032022,...topyqshift201102022,...foodanalyst3pyqset1,...assistantpyq24072019,...personalassistantpyqshift329032022,...juniorassistantpyqgrade130032022,],
+            'cfsopyq25072019': cfsopyq25072019,
+            'cfsopyq30032022':cfsopyq30032022,
+            'cfsopyq01102022': cfsopyq01102022,
+            'topyq25072019': topyq25072019,
+            'topyqshift130032022': topyqshift130032022,
+            'topyqshift201102022': topyqshift201102022,
+            'foodanalyst3pyqset1': foodanalyst3pyqset1,
+            'assistantpyq24072019': assistantpyq24072019,
+            'personalassistantpyqshift329032022': personalassistantpyqshift329032022,
+            'juniorassistantpyqgrade130032022': juniorassistantpyqgrade130032022,
+
+        'statepyqs': statepyqs = [...jpscfsopyq2023paper1,...jpscfsopyq2023paper2,...jpscfsopyq2024paper1,...jpscfsopyq2024paper2,...tamilnadufso012022,...tamilnadufso022022,...andrapdsfso2021,],
+            'jpscfsopyq2023paper1': jpscfsopyq2023paper1,
+            'jpscfsopyq2023paper2': jpscfsopyq2023paper2,
+            'jpscfsopyq2024paper1': jpscfsopyq2024paper1,
+            'jpscfsopyq2024paper2': jpscfsopyq2024paper2,
+            'tamilnadufso012022': tamilnadufso012022,
+            'tamilnadufso022022': tamilnadufso022022,
+            'andrapdsfso2021': andrapdsfso2021,
+
+            /* full pyqs */ 'pyqs':[...fssaipyqs,...statepyqs,],
         
         
         
