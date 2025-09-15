@@ -1293,7 +1293,8 @@
 { // 12
     question: "In sake production microorganism involved is",
     answers: ["Saccharomyces", "Aspergillus", "Lactobacillus", "Bacillus"],
-    correct: "Aspergillus"
+    correct: "Aspergillus",
+    description: "Aspergillus oryzae also known as koji mold is used in the preparation of alcoholic beverages such as for Sake brewing<br><br>The following properties of A. oryzae strains are important in rice saccharification for sake brewing:<br>\u25A0 <b>Growth</b>: rapid mycelial growth on and into the rice kernels<br>\u25A0 <b>Enzymes</b>: strong secretion of amylases (α-amylase and glucoamylase); some carboxypeptidase; low tyrosinase<br>\u25A0 <b>Aesthetics</b>: pleasant fragrance; accumulation of flavoring compounds<br>\u25A0 <b>Color</b>: low production of deferriferrichrome (a siderophore), flavins, and other colored substances"
 },
 { // 13
     question: "In sanfrancisco dough bread, microorganism responsible for leavening is",

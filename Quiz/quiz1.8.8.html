@@ -637,28 +637,14 @@
                     <option value="selectquestionset" style="font-weight: lighter; color: rgb(125, 125, 125);">Select Questionset</option><hr>
                     
                     <!--self made questionSets-->
-                    <!--Parts of Speech-->
-                    <option value="partsofspeech" style="font-weight: bold; color: aqua;">Parts of Speech</option>
-                        <option value="nounandpronoun" style="font-weight: bold;">Noun and Pronoun</option>
-
-                        <option value="adjective" style="font-weight: bold;">Adjective</option>
-
-                        <option value="verbandadverb"style="font-weight: bold;">Verb and Adverb</option>
-                            <option value="phrasalverb">&nbsp Phrasal Verb</option>
-                        <option value="preposition"style="font-weight: bold;">Preposition</option>
-
-                        <option value="conjunctionandinterjuction"style="font-weight: bold;">Conjuction and Interjunction</option>
-
-                        
-                    <hr>
-                    <!--English Blog.com-->
-                    <option value="englishtestblogcom"style="font-weight: bold;">English Blog.com</option>
-                        <option value="englishtestblogcombasicgrammer">Basic Grammer (English Blog.com)</option>
-                        <option value="englishtestblogcomnoun">Noun (English Blog.com)</option>
-                        <option value="englishtestblogcomverb">Verb (English Blog.com)</option>
-                        <option value="englishtestblogcomadjective">Adjective (English Blog.com)</option>
-                        <option value="englishtestblogcomidioms">Idioms (English Blog.com)</option>
-                        <option value="englishtestblogcommiscellaneous">Misllaneous (English Blog.com)</option>
+                    <!--English Comprehension-->
+                    <option value="englishcomprehension" style="font-weight: bold; color: aqua;">English Comprehension</option>
+                        <option value="partsofspeech">Parts of Speech</option>
+                        <option value="spottingerrorinsentence">Spotting error in sentences</option>
+                        <option value="synonymandantonym">Synonyms and Antonyms</option>
+                        <option value="onwordsubstitution">On Word Substitution</option>
+                        <option value="phrasesandidioms">Phrases & Idioms</option>
+                        <option value="spellingerror">Spelling error</option>
                     <hr>
                     <option value="awareness">Awareness</option>
                     <hr>
@@ -878,7 +864,6 @@
 
 <!--add Internal javascripts below-->
     <script src="English Comprehension.js"></script>
-    <script src="Englishtestblogcom.js"></script>
     <script src="Awareness.js"></script>
     <script src="FSSAI laws (act, rule, regulations).js"></script>
     <script src="FSSAI-role,provision,initiative.js"></script>
@@ -923,24 +908,14 @@ const questionSets = {
         'selectquestionset': [],
     // internal or mostly self-made sets following...
     
-        /*Parts of speech*/
-        'nounandpronoun': nounandpronoun = [],
-        'adjective': adjective = [],
-        'verbandadverb': verbandadverb = [...phrasalverb,],
-            'phrasalverb': phrasalverb,
-        'preposition': preposition = [],
-        'conjunctionandinterjuction': conjunctionandinterjuction = [],
-                /*Combined for Parts for Speech*/'partsofspeech': [...phrasalverb,],
+        'englishcomprehension': englishcomprehension = [...partsofspeech, ...spottingerrorinsentence, ...synonymandantonym, ...onwordsubstitution, ...phrasesandidioms, ...spellingerror,],    
+            'partsofspeech': partsofspeech,
+            'spottingerrorinsentence': spottingerrorinsentence,
+            'synonymandantonym': synonymandantonym,
+            'onwordsubstitution': onwordsubstitution,
+            'phrasesandidioms': phrasesandidioms,
+            'spellingerror': spellingerror,
 
-
-        /*English Blog.com*/
-        'englishtestblogcom': englishtestblogcom = [...englishtestblogcombasicgrammer,...englishtestblogcomnoun,...englishtestblogcomverb,...englishtestblogcomadjective,...englishtestblogcomidioms,...englishtestblogcommiscellaneous,],
-            'englishtestblogcombasicgrammer': englishtestblogcombasicgrammer,
-            'englishtestblogcomnoun': englishtestblogcomnoun,
-            'englishtestblogcomverb': englishtestblogcomverb,
-            'englishtestblogcomadjective': englishtestblogcomadjective,
-            'englishtestblogcomidioms': englishtestblogcomidioms,
-            'englishtestblogcommiscellaneous': englishtestblogcommiscellaneous,
         'fssairoleprovisioninitiative': [...eatrightquestionbank1,...eatrightquestionbank2,...eatrightquestionbank3,...eatrightquestionbank4,],
             'eatrightindia': [...eatrightindia,...eatrightquestionbank1,...eatrightquestionbank2,...eatrightquestionbank3,...eatrightquestionbank4,],
             'eatrightquestionbank1': eatrightquestionbank1,
